@@ -1,0 +1,18 @@
+# Environment secrets
+.env
+.env.*
+!.env.example
+*.env
+*.env.local
+
+# Node & Python dependencies
+node_modules/
+venv/
+env/
+__pycache__/
+
+# OS & Build
+.DS_Store
+.next/
+build/
+dist/

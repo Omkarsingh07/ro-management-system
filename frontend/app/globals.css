@@ -1,0 +1,591 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+}
+
+/* -----------------------------------------------------------------------
+   Semantic Theme Variables
+----------------------------------------------------------------------- */
+:root {
+  --background: #f7f8fa;
+  --foreground: #111827;
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --card-secondary: #f3f4f6;
+  --card-elevated: #ffffff;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --border: #e5e7eb;
+  --input: #ffffff;
+  --input-border: #d1d5db;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #4b5563;
+  --secondary-foreground: #ffffff;
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #2563eb;
+
+  /* ── StatCard design tokens ── */
+  --stat-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.03);
+  --stat-shadow-hover: 0 4px 16px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --stat-danger-tint: rgba(239,68,68,0.04);
+  --stat-warning-tint: rgba(245,158,11,0.04);
+  --stat-danger-border: rgba(239,68,68,0.15);
+  --stat-warning-border: rgba(245,158,11,0.15);
+}
+
+html.dark {
+  --background: #0b0b0c;
+  --foreground: #f3f4f6;
+  --card: #121214;
+  --card-foreground: #f3f4f6;
+  --card-secondary: #17171a;
+  --card-elevated: #1a1a1d;
+  --muted: #17171a;
+  --muted-foreground: #9ca3af;
+  --border: #26262b;
+  --input: #17171a;
+  --input-border: #2e2e34;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #9ca3af;
+  --secondary-foreground: #121214;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #60a5fa;
+  color-scheme: dark;
+
+  /* ── StatCard design tokens ── */
+  --stat-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --stat-shadow-hover: 0 4px 20px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  --stat-danger-tint: rgba(239,68,68,0.07);
+  --stat-warning-tint: rgba(245,158,11,0.06);
+  --stat-danger-border: rgba(239,68,68,0.22);
+  --stat-warning-border: rgba(245,158,11,0.18);
+}
+
+/* -----------------------------------------------------------------------
+   Apple / San Francisco System Typography Stack
+----------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  color: var(--foreground);
+  background-color: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body, button, input, select, textarea {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* -----------------------------------------------------------------------
+   Focus ring — accessible, visible
+----------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+html.dark :focus-visible {
+  outline-color: #60a5fa;
+}
+
+/* -----------------------------------------------------------------------
+   Critical: Always preserve white text on colored action buttons
+----------------------------------------------------------------------- */
+.text-white {
+  color: #ffffff !important;
+}
+
+/* -----------------------------------------------------------------------
+   Dark Mode Universal Semantic Surfaces & Contrast
+----------------------------------------------------------------------- */
+html.dark body {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+/* Prevent unwanted gradient blocks in dark mode */
+html.dark [class*="bg-gradient-to"] {
+  background-image: none !important;
+}
+
+/* Cards & Surfaces */
+html.dark .bg-white {
+  background-color: var(--card) !important;
+}
+
+html.dark .bg-gray-50 {
+  background-color: var(--card-secondary) !important;
+}
+
+html.dark .bg-gray-100 {
+  background-color: #1f1f23 !important;
+}
+
+html.dark .bg-gray-200 {
+  background-color: #27272b !important;
+}
+
+/* Borders & Dividers */
+html.dark .border-gray-100,
+html.dark .border-gray-200 {
+  border-color: var(--border) !important;
+}
+
+html.dark .border-gray-300 {
+  border-color: #2e2e34 !important;
+}
+
+html.dark .border-gray-400 {
+  border-color: #3b3b42 !important;
+}
+
+html.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--border) !important;
+}
+
+/* Text Colors */
+html.dark .text-gray-900 {
+  color: #f9fafb !important;
+}
+
+html.dark .text-gray-800 {
+  color: #f3f4f6 !important;
+}
+
+html.dark .text-gray-700 {
+  color: #e5e7eb !important;
+}
+
+html.dark .text-gray-600 {
+  color: #d1d5db !important;
+}
+
+html.dark .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+html.dark .text-gray-400 {
+  color: #828794 !important;
+}
+
+/* Hover States */
+html.dark .hover\:bg-gray-50:hover,
+html.dark .hover\:bg-gray-50\/70:hover {
+  background-color: var(--card-elevated) !important;
+}
+
+html.dark .hover\:bg-gray-100:hover {
+  background-color: #26262b !important;
+}
+
+html.dark .hover\:text-gray-900:hover {
+  color: #ffffff !important;
+}
+
+html.dark .hover\:text-gray-700:hover {
+  color: #f3f4f6 !important;
+}
+
+/* Inputs, Selects, Textareas */
+html.dark input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
+html.dark select,
+html.dark textarea {
+  color-scheme: dark;
+  background-color: var(--input) !important;
+  color: var(--foreground) !important;
+  border-color: var(--input-border) !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+html.dark select option {
+  background-color: #17171a;
+  color: #f3f4f6;
+}
+
+/* Tables in Dark Mode */
+html.dark table thead {
+  background-color: var(--card-secondary) !important;
+}
+
+html.dark table thead th {
+  color: var(--muted-foreground) !important;
+  border-color: var(--border) !important;
+}
+
+html.dark table tbody tr {
+  border-color: var(--border) !important;
+}
+
+/* Modal Backdrops & Dialogs */
+html.dark [class*="bg-black/"] {
+  background-color: rgba(0, 0, 0, 0.72) !important;
+}
+
+/* -----------------------------------------------------------------------
+   Semantic Badges & Highlight Cards (Dark Mode Contrast)
+----------------------------------------------------------------------- */
+/* Rose / Red */
+html.dark [class*="bg-rose-50"],
+html.dark [class*="bg-red-50"] {
+  background-color: rgba(225, 29, 72, 0.12) !important;
+}
+html.dark [class*="border-rose-200"],
+html.dark [class*="border-rose-300"],
+html.dark [class*="border-red-200"],
+html.dark [class*="border-red-300"] {
+  border-color: rgba(244, 63, 94, 0.28) !important;
+}
+html.dark .text-rose-700,
+html.dark .text-rose-800,
+html.dark .text-red-700,
+html.dark .text-red-800 {
+  color: #fb7185 !important;
+}
+html.dark .text-rose-600,
+html.dark .text-red-600 {
+  color: #f43f5e !important;
+}
+
+/* Amber / Yellow */
+html.dark [class*="bg-amber-50"],
+html.dark [class*="bg-yellow-50"] {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+}
+html.dark [class*="border-amber-200"],
+html.dark [class*="border-amber-300"],
+html.dark [class*="border-yellow-200"],
+html.dark [class*="border-yellow-300"] {
+  border-color: rgba(245, 158, 11, 0.28) !important;
+}
+html.dark .text-amber-800,
+html.dark .text-amber-900,
+html.dark .text-yellow-800,
+html.dark .text-yellow-700 {
+  color: #fbbf24 !important;
+}
+html.dark .text-amber-700 {
+  color: #f59e0b !important;
+}
+
+/* Emerald / Green */
+html.dark [class*="bg-emerald-50"],
+html.dark [class*="bg-green-50"] {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+}
+html.dark [class*="border-emerald-200"],
+html.dark [class*="border-emerald-300"],
+html.dark [class*="border-green-200"],
+html.dark [class*="border-green-300"] {
+  border-color: rgba(16, 185, 129, 0.28) !important;
+}
+html.dark .text-emerald-700,
+html.dark .text-emerald-800,
+html.dark .text-green-700,
+html.dark .text-green-800 {
+  color: #34d399 !important;
+}
+html.dark .text-emerald-600,
+html.dark .text-green-600 {
+  color: #10b981 !important;
+}
+
+/* Blue / Indigo */
+html.dark [class*="bg-blue-50"],
+html.dark [class*="bg-indigo-50"] {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+html.dark [class*="border-blue-100"],
+html.dark [class*="border-blue-200"],
+html.dark [class*="border-blue-300"],
+html.dark [class*="border-indigo-200"] {
+  border-color: rgba(59, 130, 246, 0.28) !important;
+}
+html.dark .text-blue-900,
+html.dark .text-blue-800 {
+  color: #93c5fd !important;
+}
+html.dark .text-blue-700,
+html.dark .text-blue-600 {
+  color: #60a5fa !important;
+}
+
+/* Purple */
+html.dark [class*="bg-purple-50"] {
+  background-color: rgba(168, 85, 247, 0.12) !important;
+}
+html.dark [class*="border-purple-200"],
+html.dark [class*="border-purple-300"] {
+  border-color: rgba(168, 85, 247, 0.28) !important;
+}
+html.dark .text-purple-700,
+html.dark .text-purple-800 {
+  color: #c084fc !important;
+}
+
+/* -----------------------------------------------------------------------
+   Accessibility: Reduced Motion
+----------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -----------------------------------------------------------------------
+   Dashboard — Section label utility
+----------------------------------------------------------------------- */
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  line-height: 1;
+  user-select: none;
+}
+
+html.dark .section-label {
+  color: #4b5563;
+}
+
+/* =======================================================================
+   StatCard CSS Design Tokens
+   Scoped via data-variant attribute — bypasses all Tailwind class overrides
+======================================================================= */
+
+/* ── Default (neutral) ── */
+.stat-card {
+  --sc-bg: #ffffff;
+  --sc-border: rgba(0, 0, 0, 0.07);
+  --sc-accent: #e2e8f0;
+  --sc-num: #111827;
+  --sc-label: #6b7280;
+  --sc-hint: #9ca3af;
+  --sc-icon: rgba(0, 0, 0, 0.04);
+  --sc-chip-bg: rgba(0, 0, 0, 0.06);
+  --sc-chip-color: #6b7280;
+  --sc-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px -12px rgba(0,0,0,.10);
+  --sc-shadow-hover: 0 4px 6px rgba(0,0,0,.06), 0 16px 40px -12px rgba(0,0,0,.18);
+}
+
+/* ── Dark hero variant ── */
+.stat-card[data-variant="dark"] {
+  --sc-bg: radial-gradient(ellipse at 20% 25%, rgba(99,102,241,.22) 0%, transparent 55%),
+           linear-gradient(150deg, #0B0D12 0%, #12151F 100%);
+  --sc-border: rgba(255, 255, 255, 0.09);
+  --sc-accent: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+  --sc-num: #ffffff;
+  --sc-label: rgba(255, 255, 255, 0.5);
+  --sc-hint: rgba(255, 255, 255, 0.35);
+  --sc-icon: rgba(255, 255, 255, 0.055);
+  --sc-chip-bg: rgba(99, 102, 241, 0.22);
+  --sc-chip-color: #a5b4fc;
+}
+
+/* ── Red variant ── */
+.stat-card[data-variant="red"] {
+  --sc-bg: linear-gradient(135deg, #fff1f2 0%, #ffffff 65%);
+  --sc-border: rgba(244, 63, 94, 0.15);
+  --sc-accent: #f43f5e;
+  --sc-num: #9f1239;
+  --sc-label: #be123c;
+  --sc-hint: rgba(159, 18, 57, 0.68);
+  --sc-icon: rgba(244, 63, 94, 0.06);
+  --sc-chip-bg: rgba(244, 63, 94, 0.09);
+  --sc-chip-color: #f43f5e;
+}
+
+/* ── Blue variant ── */
+.stat-card[data-variant="blue"] {
+  --sc-bg: linear-gradient(135deg, #eff6ff 0%, #ffffff 65%);
+  --sc-border: rgba(59, 130, 246, 0.15);
+  --sc-accent: #3b82f6;
+  --sc-num: #1e40af;
+  --sc-label: #1d4ed8;
+  --sc-hint: rgba(30, 64, 175, 0.65);
+  --sc-icon: rgba(59, 130, 246, 0.06);
+  --sc-chip-bg: rgba(59, 130, 246, 0.09);
+  --sc-chip-color: #3b82f6;
+}
+
+/* ── Amber variant ── */
+.stat-card[data-variant="amber"] {
+  --sc-bg: linear-gradient(135deg, #fffbeb 0%, #ffffff 65%);
+  --sc-border: rgba(245, 158, 11, 0.18);
+  --sc-accent: #f59e0b;
+  --sc-num: #92400e;
+  --sc-label: #b45309;
+  --sc-hint: rgba(146, 64, 14, 0.65);
+  --sc-icon: rgba(245, 158, 11, 0.06);
+  --sc-chip-bg: rgba(245, 158, 11, 0.09);
+  --sc-chip-color: #f59e0b;
+}
+
+/* ── Green variant ── */
+.stat-card[data-variant="green"] {
+  --sc-bg: linear-gradient(135deg, #f0fdf4 0%, #ffffff 65%);
+  --sc-border: rgba(16, 185, 129, 0.15);
+  --sc-accent: #10b981;
+  --sc-num: #064e3b;
+  --sc-label: #047857;
+  --sc-hint: rgba(6, 78, 59, 0.65);
+  --sc-icon: rgba(16, 185, 129, 0.06);
+  --sc-chip-bg: rgba(16, 185, 129, 0.09);
+  --sc-chip-color: #10b981;
+}
+
+/* ── Dark mode overrides ── */
+html.dark .stat-card {
+  --sc-bg: #111827;
+  --sc-border: rgba(255, 255, 255, 0.07);
+  --sc-accent: #374151;
+  --sc-num: #f9fafb;
+  --sc-label: #9ca3af;
+  --sc-hint: #6b7280;
+  --sc-icon: rgba(255, 255, 255, 0.04);
+  --sc-chip-bg: rgba(255, 255, 255, 0.07);
+  --sc-chip-color: #9ca3af;
+}
+
+html.dark .stat-card[data-variant="dark"] {
+  --sc-bg: radial-gradient(ellipse at 20% 25%, rgba(99,102,241,.3) 0%, transparent 55%),
+           linear-gradient(150deg, #060810 0%, #0E1018 100%);
+  --sc-border: rgba(255, 255, 255, 0.09);
+  --sc-num: #ffffff;
+  --sc-label: rgba(255, 255, 255, 0.5);
+  --sc-hint: rgba(255, 255, 255, 0.35);
+  --sc-icon: rgba(255, 255, 255, 0.06);
+  --sc-chip-bg: rgba(99, 102, 241, 0.25);
+  --sc-chip-color: #a5b4fc;
+}
+
+html.dark .stat-card[data-variant="red"] {
+  --sc-bg: linear-gradient(135deg, rgba(244,63,94,.1) 0%, transparent 65%), #121214;
+  --sc-border: rgba(244, 63, 94, 0.2);
+  --sc-num: #fb7185;
+  --sc-label: rgba(251, 113, 133, 0.75);
+  --sc-hint: rgba(251, 113, 133, 0.5);
+  --sc-icon: rgba(244, 63, 94, 0.09);
+  --sc-chip-bg: rgba(244, 63, 94, 0.14);
+  --sc-chip-color: #fb7185;
+}
+
+html.dark .stat-card[data-variant="blue"] {
+  --sc-bg: linear-gradient(135deg, rgba(59,130,246,.1) 0%, transparent 65%), #121214;
+  --sc-border: rgba(59, 130, 246, 0.2);
+  --sc-num: #93c5fd;
+  --sc-label: rgba(147, 197, 253, 0.75);
+  --sc-hint: rgba(147, 197, 253, 0.5);
+  --sc-icon: rgba(59, 130, 246, 0.09);
+  --sc-chip-bg: rgba(59, 130, 246, 0.14);
+  --sc-chip-color: #93c5fd;
+}
+
+html.dark .stat-card[data-variant="amber"] {
+  --sc-bg: linear-gradient(135deg, rgba(245,158,11,.1) 0%, transparent 65%), #121214;
+  --sc-border: rgba(245, 158, 11, 0.2);
+  --sc-num: #fcd34d;
+  --sc-label: rgba(252, 211, 77, 0.75);
+  --sc-hint: rgba(252, 211, 77, 0.5);
+  --sc-icon: rgba(245, 158, 11, 0.09);
+  --sc-chip-bg: rgba(245, 158, 11, 0.14);
+  --sc-chip-color: #fcd34d;
+}
+
+html.dark .stat-card[data-variant="green"] {
+  --sc-bg: linear-gradient(135deg, rgba(16,185,129,.1) 0%, transparent 65%), #121214;
+  --sc-border: rgba(16, 185, 129, 0.2);
+  --sc-num: #6ee7b7;
+  --sc-label: rgba(110, 231, 183, 0.75);
+  --sc-hint: rgba(110, 231, 183, 0.5);
+  --sc-icon: rgba(16, 185, 129, 0.09);
+  --sc-chip-bg: rgba(16, 185, 129, 0.14);
+  --sc-chip-color: #6ee7b7;
+}
+
+/* ── Card entrance animation ── */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-card-animated {
+  animation: card-enter 400ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-card-animated {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Dashboard section header ── */
+.dash-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.dash-section-header > span {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.dash-section-header > div {
+  flex: 1;
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+html.dark .dash-section-header > span {
+  color: #4b5563;
+}
+
+html.dark .dash-section-header > div {
+  background-color: rgba(255, 255, 255, 0.06);
+}

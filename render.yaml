@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: ro-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: starter # Starter plan or above required on Render for persistent disks
+    disk:
+      name: ro-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: ENVIRONMENT
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+      - key: COOKIE_SAMESITE
+        value: none
+      - key: AUTH_USERNAME
+        value: admin
+      - key: AUTH_PASSWORD_HASH
+        sync: false # Set in Render dashboard
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        sync: false # Set to your Vercel URL, e.g. https://your-app.vercel.app
