@@ -25,10 +25,6 @@ import type {
 } from "./types";
 
 export function getBaseUrl(): string {
-  if (typeof window !== "undefined") {
-    // Match the current browsing host (localhost, 127.0.0.1, or phone LAN IP) on backend port 8000
-    return `${window.location.protocol}//${window.location.hostname}:8000`;
-  }
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "");
   }

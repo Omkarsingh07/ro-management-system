@@ -39,7 +39,7 @@ const BOTTOM_NAV_ITEMS = [
 
 export function Navbar() {
   const { user, logout } = useAuth();
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme, mounted } = useTheme();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -116,11 +116,13 @@ export function Navbar() {
               type="button"
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
               id="theme-toggle-button"
-              aria-label={`Switch to ${resolvedTheme === "dark" ? "Light" : "Dark"} mode`}
-              title={`Switch to ${resolvedTheme === "dark" ? "Light" : "Dark"} mode`}
+              aria-label={mounted ? `Switch to ${resolvedTheme === "dark" ? "Light" : "Dark"} mode` : "Toggle theme"}
+              title={mounted ? `Switch to ${resolvedTheme === "dark" ? "Light" : "Dark"} mode` : "Toggle theme"}
               className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-[#26262B] bg-gray-100 hover:bg-gray-200 dark:bg-[#17171A] dark:hover:bg-[#222227] text-gray-700 dark:text-gray-300 transition-colors cursor-pointer"
             >
-              {resolvedTheme === "dark" ? (
+              {!mounted ? (
+                <div className="w-4 h-4" />
+              ) : resolvedTheme === "dark" ? (
                 <Sun size={17} className="text-amber-400" />
               ) : (
                 <Moon size={17} className="text-gray-700" />

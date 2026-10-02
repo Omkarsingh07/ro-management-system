@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -17,20 +18,20 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
       <head>
-        <script
+        <Script
+          id="theme-initializer"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              (function() {
-                try {
-                  var stored = localStorage.getItem("ro_theme");
-                  var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-                  if (stored === "dark" || (!stored && prefersDark) || (stored === "system" && prefersDark)) {
-                    document.documentElement.classList.add("dark");
-                  } else {
-                    document.documentElement.classList.remove("dark");
-                  }
-                } catch (e) {}
-              })();
+              try {
+                var stored = localStorage.getItem("ro_theme");
+                var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                if (stored === "dark" || (!stored && prefersDark) || (stored === "system" && prefersDark)) {
+                  document.documentElement.classList.add("dark");
+                } else {
+                  document.documentElement.classList.remove("dark");
+                }
+              } catch (e) {}
             `,
           }}
         />

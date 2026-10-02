@@ -8,6 +8,7 @@ interface ThemeContextType {
   theme: Theme;
   resolvedTheme: "light" | "dark";
   setTheme: (theme: Theme) => void;
+  mounted: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -51,10 +52,18 @@ function syncHtmlClass(targetTheme: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() =>
-    getInitialResolvedTheme(getInitialTheme())
-  );
+  const [theme, setThemeState] = useState<Theme>("system");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const initialTheme = getInitialTheme();
+    setThemeState(initialTheme);
+    const resolved = getInitialResolvedTheme(initialTheme);
+    setResolvedTheme(resolved);
+    syncHtmlClass(initialTheme);
+  }, []);
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
@@ -69,7 +78,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Synchronize DOM class on mount or theme change
+    if (!mounted) return;
+    // Synchronize DOM class on theme change
     syncHtmlClass(theme);
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -91,10 +101,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [theme]);
+  }, [theme, mounted]);
 
   return (
-    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme, mounted }}>
       {children}
     </ThemeContext.Provider>
   );
