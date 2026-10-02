@@ -23,6 +23,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isPublicRoute = pathname === "/login";
 
   const checkAuth = useCallback(async () => {
+    if (user) {
+      setLoading(false);
+      if (isPublicRoute) {
+        router.replace("/dashboard");
+      }
+      return;
+    }
+
     try {
       const currentUser = await fetchCurrentUser();
       setUser(currentUser);
@@ -37,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [isPublicRoute, router]);
+  }, [isPublicRoute, router, user]);
 
   useEffect(() => {
     checkAuth();
@@ -46,7 +54,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleLogin = async (credentials: LoginCredentials) => {
     const authData = await loginUser(credentials);
     setUser(authData);
-    window.location.href = "/dashboard";
+    setLoading(false);
+    router.replace("/dashboard");
   };
 
   const handleLogout = async () => {
@@ -56,7 +65,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Ignore logout request errors — proceed to reset state
     } finally {
       setUser(null);
-      window.location.href = "/login";
+      setLoading(false);
+      router.replace("/login");
     }
   };
 
