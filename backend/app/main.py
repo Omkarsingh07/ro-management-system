@@ -150,11 +150,23 @@ def initialize_excel_files() -> None:
     """Ensure both Excel data files exist with the correct sheets and headers."""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
+    default_data_dir = Path(__file__).resolve().parent.parent / "data"
+    default_customers = default_data_dir / "customers.xlsx"
+    default_materials = default_data_dir / "materials.xlsx"
+
     if not CUSTOMERS_FILE.exists():
-        _create_excel_file(CUSTOMERS_FILE, CUSTOMERS_SHEETS)
+        if default_customers.exists() and default_customers.resolve() != CUSTOMERS_FILE.resolve():
+            import shutil
+            shutil.copy2(default_customers, CUSTOMERS_FILE)
+        else:
+            _create_excel_file(CUSTOMERS_FILE, CUSTOMERS_SHEETS)
 
     if not MATERIALS_FILE.exists():
-        _create_excel_file(MATERIALS_FILE, MATERIALS_SHEETS)
+        if default_materials.exists() and default_materials.resolve() != MATERIALS_FILE.resolve():
+            import shutil
+            shutil.copy2(default_materials, MATERIALS_FILE)
+        else:
+            _create_excel_file(MATERIALS_FILE, MATERIALS_SHEETS)
 
 
 # Run initialization at startup
