@@ -22,34 +22,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isPublicRoute = pathname === "/login";
 
-  const checkAuth = useCallback(async () => {
-    if (user) {
-      setLoading(false);
-      if (isPublicRoute) {
-        router.replace("/dashboard");
-      }
-      return;
-    }
-
-    try {
-      const currentUser = await fetchCurrentUser();
-      setUser(currentUser);
-      if (isPublicRoute) {
-        router.replace("/dashboard");
-      }
-    } catch {
-      setUser(null);
-      if (!isPublicRoute) {
-        router.replace("/login");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [isPublicRoute, router, user]);
-
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    let active = true;
+
+    async function verify() {
+      if (user) {
+        setLoading(false);
+        if (isPublicRoute) {
+          router.replace("/dashboard");
+        }
+        return;
+      }
+
+      // Fast-path for login page: skip network check if there's no stored token
+      const token = typeof window !== "undefined" ? localStorage.getItem("ro_token") : null;
+      if (!token && isPublicRoute) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const currentUser = await fetchCurrentUser();
+        if (!active) return;
+        setUser(currentUser);
+        if (isPublicRoute) {
+          router.replace("/dashboard");
+        }
+      } catch {
+        if (!active) return;
+        setUser(null);
+        if (!isPublicRoute) {
+          router.replace("/login");
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+
+    verify();
+
+    return () => {
+      active = false;
+    };
+  }, [isPublicRoute, pathname, router]);
 
   const handleLogin = async (credentials: LoginCredentials) => {
     const authData = await loginUser(credentials);

@@ -14,11 +14,13 @@ def main():
         if not password:
             password = "admin123"
 
-    salt = bcrypt.gensalt(rounds=12)
+    rounds = int(sys.argv[2]) if len(sys.argv) > 2 else 10
+    salt = bcrypt.gensalt(rounds=rounds)
     hashed = bcrypt.hashpw(password.encode("utf-8"), salt).decode("utf-8")
 
     print("\n------------------------------------------------------------")
-    print(f"Password : {password}")
+    print(f"Password    : {password}")
+    print(f"Rounds      : {rounds} (fast sub-60ms login)")
     print(f"Bcrypt Hash : {hashed}")
     print("------------------------------------------------------------")
     print("Copy the Bcrypt Hash above and set it as AUTH_PASSWORD_HASH in Render/environment.\n")

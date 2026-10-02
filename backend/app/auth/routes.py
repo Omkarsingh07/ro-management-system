@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-# Dummy hash used to mitigate timing attacks when an invalid username is tested
-_DUMMY_HASH = "$2b$12$e80yqVb/a9Lp3M6u7e9P.exkLpU39s7YjU6zQv4i4d4f8h9j1k2l3"
+# Dummy hash used to mitigate timing attacks when an invalid username is tested (10 rounds for fast response)
+_DUMMY_HASH = "$2b$10$lrFCR3aqxlAhQhqdvdsneeLb0BxubjVVJ.pZW5295u1y.aWuyx3/."
 
 
 @router.post(

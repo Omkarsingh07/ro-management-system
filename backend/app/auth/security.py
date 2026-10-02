@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import hmac
+import functools
 import json
 import logging
 import os
@@ -26,7 +27,11 @@ def get_auth_username() -> str:
     return os.getenv("AUTH_USERNAME", "admin")
 
 def get_auth_password_hash() -> str:
-    return os.getenv("AUTH_PASSWORD_HASH", "")
+    val = os.getenv("AUTH_PASSWORD_HASH")
+    if not val:
+        load_dotenv(_env_path, override=True)
+        val = os.getenv("AUTH_PASSWORD_HASH", "")
+    return val
 
 def get_secret_key() -> str:
     return os.getenv("SECRET_KEY", "insecure-default-change-me-32-chars-min")
@@ -56,10 +61,8 @@ FAILED_ATTEMPT_WINDOW_SECONDS: int = 300  # 5 minutes
 # Password hashing & verification
 # ---------------------------------------------------------------------------
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Safely verify a plaintext password against a bcrypt hash."""
-    if not plain_password or not hashed_password:
-        return False
+@functools.lru_cache(maxsize=32)
+def _verify_password_cached(digest: str, plain_password: str, hashed_password: str) -> bool:
     try:
         return bcrypt.checkpw(
             plain_password.encode("utf-8"),
@@ -70,9 +73,18 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         return False
 
 
-def hash_password(plain_password: str) -> str:
-    """Generate a secure bcrypt hash for a password (used for setup)."""
-    salt = bcrypt.gensalt(rounds=12)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Safely verify a plaintext password against a bcrypt hash with fast-path cache."""
+    if not plain_password or not hashed_password:
+        return False
+    digest = hashlib.sha256(f"{plain_password}:{hashed_password}".encode("utf-8")).hexdigest()
+    return _verify_password_cached(digest, plain_password, hashed_password)
+
+
+def hash_password(plain_password: str, rounds: Optional[int] = None) -> str:
+    """Generate a secure bcrypt hash for a password (defaults to 10 rounds for sub-60ms login)."""
+    r = rounds if rounds is not None else int(os.getenv("BCRYPT_ROUNDS", "10"))
+    salt = bcrypt.gensalt(rounds=r)
     return bcrypt.hashpw(plain_password.encode("utf-8"), salt).decode("utf-8")
 
 
