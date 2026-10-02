@@ -157,7 +157,7 @@ export default function EditMaterialPage() {
       )}
 
       {/* ── Form Card ── */}
-      <form onSubmit={handleSubmit} className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-lg shadow-sm p-6 space-y-6 text-sm">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-xl shadow-xs p-4 sm:p-6 space-y-6 text-sm">
         {/* Basic Info */}
         <div className="space-y-4">
           <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-100 dark:border-[#26262B] pb-2">
@@ -309,17 +309,17 @@ export default function EditMaterialPage() {
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-[#26262B]">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-[#26262B]">
           <Link
             href={`/inventory/${encodeURIComponent(materialId)}`}
-            className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 rounded border border-gray-300 dark:border-[#2E2E34] hover:bg-gray-50 dark:hover:bg-[#17171A]"
+            className="px-4 py-2.5 text-sm text-center text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white rounded-xl border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] hover:bg-gray-50 dark:hover:bg-[#222226] transition-colors"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={submitting}
-            className="px-5 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded shadow-sm disabled:opacity-50"
+            className="px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-xs disabled:opacity-50 transition-colors cursor-pointer"
           >
             {submitting ? "Saving Changes..." : "Save Changes"}
           </button>

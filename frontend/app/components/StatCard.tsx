@@ -104,24 +104,24 @@ const SIZE_CONFIG: Record<
   { padding: string; numClass: string; minH: string }
 > = {
   sm: {
-    padding: "p-4",
-    numClass: "text-[36px] sm:text-[40px]",
-    minH: "min-h-[100px]",
+    padding: "p-3.5 sm:p-4",
+    numClass: "text-[24px] sm:text-[32px] lg:text-[38px]",
+    minH: "min-h-[90px] sm:min-h-[100px]",
   },
   md: {
-    padding: "p-5",
-    numClass: "text-[44px] sm:text-[48px]",
-    minH: "min-h-[120px]",
+    padding: "p-4 sm:p-5",
+    numClass: "text-[28px] sm:text-[38px] lg:text-[46px]",
+    minH: "min-h-[105px] sm:min-h-[120px]",
   },
   lg: {
-    padding: "p-6",
-    numClass: "text-[48px] sm:text-[56px]",
-    minH: "min-h-[140px]",
+    padding: "p-4 sm:p-6",
+    numClass: "text-[32px] sm:text-[44px] lg:text-[54px]",
+    minH: "min-h-[115px] sm:min-h-[140px]",
   },
   hero: {
-    padding: "p-7 sm:p-8",
-    numClass: "text-[64px] sm:text-[76px]",
-    minH: "min-h-[200px]",
+    padding: "p-5 sm:p-7 lg:p-8",
+    numClass: "text-[38px] sm:text-[54px] lg:text-[72px]",
+    minH: "min-h-[160px] sm:min-h-[200px]",
   },
 };
 

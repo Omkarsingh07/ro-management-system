@@ -333,34 +333,64 @@ export default function ServiceDetailPage() {
         </div>
 
         {service.materials && service.materials.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
-              <thead className="bg-gray-50/50 dark:bg-[#17171A] text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-[#26262B] tracking-wider">
-                <tr>
-                  <th className="px-4 py-3 whitespace-nowrap">Material ID</th>
-                  <th className="px-4 py-3">Material Name</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Quantity</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Unit Price (₹)</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Total (₹)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]">
-                {service.materials.map((m) => (
-                  <tr key={m.material_id} className="hover:bg-gray-50/60 dark:hover:bg-[#1A1A1D]/60 transition-colors">
-                    <td className="px-4 py-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400 whitespace-nowrap">
-                      <Link href={`/inventory/${encodeURIComponent(m.material_id)}`} className="hover:underline">
-                        {m.material_id}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3.5 font-semibold text-gray-900 dark:text-[#F3F4F6]">{m.material_name}</td>
-                    <td className="px-4 py-3.5 text-right font-bold text-gray-900 dark:text-[#F3F4F6]">{m.quantity}</td>
-                    <td className="px-4 py-3.5 text-right text-gray-600 dark:text-gray-300 whitespace-nowrap">₹{m.unit_price.toFixed(2)}</td>
-                    <td className="px-4 py-3.5 text-right font-bold text-gray-900 dark:text-[#F3F4F6] whitespace-nowrap">₹{m.total.toFixed(2)}</td>
+          <>
+            {/* Mobile Cards (< 640px) */}
+            <div className="block sm:hidden divide-y divide-gray-100 dark:divide-[#26262B]">
+              {service.materials.map((m) => (
+                <div key={`mob-mat-${m.material_id}`} className="p-3.5 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-gray-900 dark:text-[#F3F4F6] text-xs">
+                      {m.material_name}
+                    </span>
+                    <span className="font-bold text-gray-900 dark:text-[#F3F4F6] text-xs">
+                      ₹{m.total.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400">
+                    <Link
+                      href={`/inventory/${encodeURIComponent(m.material_id)}`}
+                      className="font-mono text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      {m.material_id}
+                    </Link>
+                    <span>
+                      {m.quantity} × ₹{m.unit_price.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table (>= 640px) */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
+                <thead className="bg-gray-50/50 dark:bg-[#17171A] text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-[#26262B] tracking-wider">
+                  <tr>
+                    <th className="px-4 py-3 whitespace-nowrap">Material ID</th>
+                    <th className="px-4 py-3">Material Name</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Quantity</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Unit Price (₹)</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Total (₹)</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]">
+                  {service.materials.map((m) => (
+                    <tr key={m.material_id} className="hover:bg-gray-50/60 dark:hover:bg-[#1A1A1D]/60 transition-colors">
+                      <td className="px-4 py-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400 whitespace-nowrap">
+                        <Link href={`/inventory/${encodeURIComponent(m.material_id)}`} className="hover:underline">
+                          {m.material_id}
+                        </Link>
+                      </td>
+                      <td className="px-4 py-3.5 font-semibold text-gray-900 dark:text-[#F3F4F6]">{m.material_name}</td>
+                      <td className="px-4 py-3.5 text-right font-bold text-gray-900 dark:text-[#F3F4F6]">{m.quantity}</td>
+                      <td className="px-4 py-3.5 text-right text-gray-600 dark:text-gray-300 whitespace-nowrap">₹{m.unit_price.toFixed(2)}</td>
+                      <td className="px-4 py-3.5 text-right font-bold text-gray-900 dark:text-[#F3F4F6] whitespace-nowrap">₹{m.total.toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         ) : (
           <div className="p-8 text-center text-sm text-gray-500 dark:text-gray-400">
             {service.completion_status === "COMPLETED"
@@ -413,7 +443,7 @@ export default function ServiceDetailPage() {
                 </div>
 
                 {/* Add Material Dropdown */}
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <select
                     value={chosenMatId}
                     onChange={(e) => setChosenMatId(e.target.value)}
@@ -434,7 +464,7 @@ export default function ServiceDetailPage() {
                     type="button"
                     onClick={handleAddMaterial}
                     disabled={!chosenMatId}
-                    className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50 cursor-pointer text-center"
                   >
                     + Add
                   </button>
@@ -446,35 +476,37 @@ export default function ServiceDetailPage() {
                     {selectedMaterials.map((sm) => (
                       <div
                         key={sm.material_id}
-                        className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded p-2 flex items-center justify-between gap-2 text-xs"
+                        className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded p-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
                       >
                         <div className="flex-1">
                           <p className="font-semibold text-gray-800 dark:text-gray-200">{sm.material_name}</p>
-                          <p className="text-gray-400 dark:text-gray-500">
+                          <p className="text-gray-400 dark:text-gray-500 text-[11px]">
                             Available: {sm.available_stock} {sm.unit} • ₹{sm.unit_price}/unit
                           </p>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-gray-500 dark:text-gray-400">Qty:</span>
-                          <input
-                            type="number"
-                            min="1"
-                            max={sm.available_stock}
-                            step="any"
-                            value={sm.quantity}
-                            onChange={(e) =>
-                              handleQuantityChange(sm.material_id, parseFloat(e.target.value) || 0)
-                            }
-                            className="w-16 px-1.5 py-1 border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] text-gray-900 dark:text-[#F3F4F6] rounded text-right font-medium"
-                          />
-                          <span className="text-gray-600 dark:text-gray-300">{sm.unit}</span>
-                          <span className="font-semibold text-gray-800 dark:text-gray-200 ml-2 w-16 text-right">
+                        <div className="flex items-center justify-between sm:justify-end gap-2 border-t sm:border-t-0 pt-1.5 sm:pt-0 border-gray-100 dark:border-[#26262B]">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-gray-500 dark:text-gray-400">Qty:</span>
+                            <input
+                              type="number"
+                              min="1"
+                              max={sm.available_stock}
+                              step="any"
+                              value={sm.quantity}
+                              onChange={(e) =>
+                                handleQuantityChange(sm.material_id, parseFloat(e.target.value) || 0)
+                              }
+                              className="w-16 px-1.5 py-1 border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] text-gray-900 dark:text-[#F3F4F6] rounded text-right font-medium"
+                            />
+                            <span className="text-gray-600 dark:text-gray-300">{sm.unit}</span>
+                          </div>
+                          <span className="font-semibold text-gray-800 dark:text-gray-200 min-w-16 text-right">
                             ₹{(sm.quantity * sm.unit_price).toFixed(2)}
                           </span>
                           <button
                             type="button"
                             onClick={() => handleRemoveMaterial(sm.material_id)}
-                            className="text-red-500 dark:text-rose-400 hover:text-red-700 dark:hover:text-rose-300 ml-1 font-bold cursor-pointer"
+                            className="text-red-500 dark:text-rose-400 hover:text-red-700 dark:hover:text-rose-300 ml-1 font-bold cursor-pointer p-1"
                             title="Remove material"
                           >
                             ✕

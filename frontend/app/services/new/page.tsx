@@ -165,7 +165,7 @@ function NewServiceContent() {
 
       <form onSubmit={handleSubmit} noValidate className="space-y-6">
         {/* ── CARD 1: Customer Selection ── */}
-        <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-6 shadow-xs transition-shadow">
+        <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-4 sm:p-6 shadow-xs transition-shadow">
           <div className="flex items-center justify-between pb-4 mb-5 border-b border-gray-100 dark:border-[#1E1E22]">
             <h2 className="text-sm font-semibold text-gray-900 dark:text-[#F3F4F6]">
               Customer <span className="text-red-500">*</span>
@@ -330,7 +330,7 @@ function NewServiceContent() {
         </div>
 
         {/* ── CARD 2: Service Details ── */}
-        <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-6 shadow-xs">
+        <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-4 sm:p-6 shadow-xs">
           <div className="pb-4 mb-5 border-b border-gray-100 dark:border-[#1E1E22]">
             <h2 className="text-sm font-semibold text-gray-900 dark:text-[#F3F4F6]">
               Service Details
@@ -405,7 +405,7 @@ function NewServiceContent() {
         </div>
 
         {/* ── CARD 3: Billing ── */}
-        <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-6 shadow-xs">
+        <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-4 sm:p-6 shadow-xs">
           <div className="flex items-center justify-between pb-4 mb-5 border-b border-gray-100 dark:border-[#1E1E22]">
             <h2 className="text-sm font-semibold text-gray-900 dark:text-[#F3F4F6]">
               Billing
@@ -471,7 +471,7 @@ function NewServiceContent() {
         </div>
 
         {/* ── CARD 4: Work & Notes ── */}
-        <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-6 shadow-xs">
+        <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-4 sm:p-6 shadow-xs">
           <div className="pb-4 mb-5 border-b border-gray-100 dark:border-[#1E1E22]">
             <h2 className="text-sm font-semibold text-gray-900 dark:text-[#F3F4F6]">
               Work & Notes
@@ -527,19 +527,19 @@ function NewServiceContent() {
         </div>
 
         {/* ── Action Buttons ── */}
-        <div className="flex items-center justify-end gap-3 pt-2">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2">
           <button
             type="button"
             onClick={() => router.push("/services")}
             disabled={submitting}
-            className="px-5 py-2.5 rounded-xl border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#222226] disabled:opacity-50 transition-colors cursor-pointer shadow-2xs"
+            className="px-5 py-2.5 rounded-xl border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#222226] disabled:opacity-50 transition-colors cursor-pointer shadow-2xs text-center"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold shadow-sm hover:shadow transition-all disabled:opacity-50 cursor-pointer flex items-center gap-2"
+            className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold shadow-sm hover:shadow transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 text-center"
           >
             {submitting ? "Saving…" : "Save Service"}
           </button>

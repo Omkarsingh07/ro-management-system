@@ -229,108 +229,206 @@ export default function InventoryPage() {
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
-              <thead className="bg-gray-50/75 dark:bg-[#161619] text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-[#26262B]">
-                <tr>
-                  <th className="px-4 py-3 whitespace-nowrap">Material ID</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Material Name</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Category</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Current Stock</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Min Stock</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Purchase Price</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Selling Price</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Supplier</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Status</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]/60 text-sm">
-                {paginatedMaterials.map((m) => (
-                  <tr key={m.material_id} className="hover:bg-gray-50/60 dark:hover:bg-[#17171A]/60 transition-colors">
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+          <div className="space-y-4">
+            {/* Mobile Card View (< 768px) */}
+            <div className="block md:hidden p-3 space-y-3">
+              {paginatedMaterials.map((m) => (
+                <div
+                  key={`mobile-${m.material_id}`}
+                  className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-2xl p-4 shadow-xs space-y-3 transition-colors"
+                >
+                  {/* Top row: Name & Stock Badge */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
                       <Link
                         href={`/inventory/${m.material_id}`}
-                        className="font-mono text-xs font-semibold px-2 py-1 rounded-md bg-gray-100 dark:bg-[#1E1E22] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2C2C32] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                      >
-                        {m.material_id}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap font-semibold text-gray-900 dark:text-[#F3F4F6]">
-                      <Link
-                        href={`/inventory/${m.material_id}`}
-                        className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        className="font-bold text-gray-900 dark:text-[#F3F4F6] text-sm hover:text-blue-600 dark:hover:text-blue-400 block"
                       >
                         {m.material_name}
                       </Link>
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-medium">
-                      {m.category || "—"}
-                    </td>
-                    <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                      <span className="font-bold text-gray-900 dark:text-[#F3F4F6]">
-                        {m.current_stock}
-                      </span>{" "}
-                      <span className="text-xs text-gray-400 dark:text-gray-500">
-                        {m.unit}
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="font-mono text-xs text-gray-500 dark:text-gray-400">
+                          {m.material_id}
+                        </span>
+                        {m.category && (
+                          <span className="text-[11px] font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-[#1C1C20] px-2 py-0.5 rounded-md">
+                            {m.category}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <StockStatusBadge
+                      currentStock={m.current_stock}
+                      minimumStock={m.minimum_stock}
+                      isOutOfStock={m.is_out_of_stock}
+                      isLowStock={m.is_low_stock}
+                    />
+                  </div>
+
+                  {/* Stock & Pricing details */}
+                  <div className="grid grid-cols-2 gap-2 bg-gray-50/80 dark:bg-[#17171A] p-3 rounded-xl border border-gray-100 dark:border-[#222227] text-xs">
+                    <div>
+                      <span className="text-[10px] uppercase font-semibold text-gray-400 dark:text-gray-500 block">
+                        Current Stock
                       </span>
-                    </td>
-                    <td className="px-4 py-3.5 text-right text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                      {m.minimum_stock} <span className="text-xs text-gray-400 font-normal">{m.unit}</span>
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-medium text-gray-700 dark:text-gray-300 text-sm whitespace-nowrap">
-                      ₹{m.purchase_price}
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-bold text-gray-900 dark:text-[#F3F4F6] whitespace-nowrap">
-                      ₹{m.selling_price}
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap">
-                      {m.supplier || "—"}
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <StockStatusBadge
-                        currentStock={m.current_stock}
-                        minimumStock={m.minimum_stock}
-                        isOutOfStock={m.is_out_of_stock}
-                        isLowStock={m.is_low_stock}
-                      />
-                    </td>
-                    <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedForPurchase(m)}
-                          className="px-2.5 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200/80 dark:border-emerald-800/60 rounded-lg transition-colors cursor-pointer"
-                          title="Purchase / Add Stock"
-                        >
-                          + Stock
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedForAdjust(m)}
-                          className="px-2.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/60 rounded-lg transition-colors cursor-pointer"
-                          title="Manual Stock Adjustment"
-                        >
-                          Adjust
-                        </button>
+                      <span className="font-bold text-gray-900 dark:text-white text-base">
+                        {m.current_stock} <span className="text-xs font-normal text-gray-500">{m.unit}</span>
+                      </span>
+                      <span className="text-[10px] text-gray-400 block mt-0.5">
+                        Min required: {m.minimum_stock} {m.unit}
+                      </span>
+                    </div>
+
+                    <div className="text-right">
+                      <span className="text-[10px] uppercase font-semibold text-gray-400 dark:text-gray-500 block">
+                        Selling Price
+                      </span>
+                      <span className="font-bold text-gray-900 dark:text-white text-base">
+                        ₹{m.selling_price}
+                      </span>
+                      <span className="text-[10px] text-gray-400 block mt-0.5">
+                        Cost: ₹{m.purchase_price}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="flex items-center justify-end gap-1.5 pt-1 border-t border-gray-100 dark:border-[#1E1E22]">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedForPurchase(m)}
+                      className="flex-1 py-2 px-2 text-center text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200/80 dark:border-emerald-800/60 rounded-xl transition-colors cursor-pointer"
+                    >
+                      + Stock
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedForAdjust(m)}
+                      className="flex-1 py-2 px-2 text-center text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/60 rounded-xl transition-colors cursor-pointer"
+                    >
+                      Adjust
+                    </button>
+                    <Link
+                      href={`/inventory/${m.material_id}`}
+                      className="py-2 px-3 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50/70 hover:bg-blue-100 dark:bg-blue-950/40 border border-blue-200/70 dark:border-blue-800/60 rounded-xl transition-colors"
+                    >
+                      View
+                    </Link>
+                    <Link
+                      href={`/inventory/${m.material_id}/edit`}
+                      className="py-2 px-3 text-xs font-semibold text-gray-700 dark:text-gray-200 bg-white hover:bg-gray-50 dark:bg-[#1A1A1E] dark:hover:bg-[#222227] border border-gray-200 dark:border-[#2E2E34] rounded-xl transition-colors"
+                    >
+                      Edit
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View (>= 768px) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
+                <thead className="bg-gray-50/75 dark:bg-[#161619] text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-[#26262B]">
+                  <tr>
+                    <th className="px-4 py-3 whitespace-nowrap">Material ID</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Material Name</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Category</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Current Stock</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Min Stock</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Purchase Price</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Selling Price</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Supplier</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Status</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]/60 text-sm">
+                  {paginatedMaterials.map((m) => (
+                    <tr key={m.material_id} className="hover:bg-gray-50/60 dark:hover:bg-[#17171A]/60 transition-colors">
+                      <td className="px-4 py-3.5 whitespace-nowrap">
                         <Link
                           href={`/inventory/${m.material_id}`}
-                          className="px-2.5 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50/70 hover:bg-blue-100 dark:bg-blue-950/40 border border-blue-200/70 dark:border-blue-800/60 rounded-lg transition-colors"
+                          className="font-mono text-xs font-semibold px-2 py-1 rounded-md bg-gray-100 dark:bg-[#1E1E22] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2C2C32] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                         >
-                          View
+                          {m.material_id}
                         </Link>
+                      </td>
+                      <td className="px-4 py-3.5 whitespace-nowrap font-semibold text-gray-900 dark:text-[#F3F4F6]">
                         <Link
-                          href={`/inventory/${m.material_id}/edit`}
-                          className="px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white hover:bg-gray-50 dark:bg-[#1A1A1E] dark:hover:bg-[#222227] border border-gray-200 dark:border-[#2E2E34] rounded-lg transition-colors"
+                          href={`/inventory/${m.material_id}`}
+                          className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                         >
-                          Edit
+                          {m.material_name}
                         </Link>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </td>
+                      <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-medium">
+                        {m.category || "—"}
+                      </td>
+                      <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                        <span className="font-bold text-gray-900 dark:text-[#F3F4F6]">
+                          {m.current_stock}
+                        </span>{" "}
+                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                          {m.unit}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3.5 text-right text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                        {m.minimum_stock} <span className="text-xs text-gray-400 font-normal">{m.unit}</span>
+                      </td>
+                      <td className="px-4 py-3.5 text-right font-medium text-gray-700 dark:text-gray-300 text-sm whitespace-nowrap">
+                        ₹{m.purchase_price}
+                      </td>
+                      <td className="px-4 py-3.5 text-right font-bold text-gray-900 dark:text-[#F3F4F6] whitespace-nowrap">
+                        ₹{m.selling_price}
+                      </td>
+                      <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                        {m.supplier || "—"}
+                      </td>
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <StockStatusBadge
+                          currentStock={m.current_stock}
+                          minimumStock={m.minimum_stock}
+                          isOutOfStock={m.is_out_of_stock}
+                          isLowStock={m.is_low_stock}
+                        />
+                      </td>
+                      <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedForPurchase(m)}
+                            className="px-2.5 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200/80 dark:border-emerald-800/60 rounded-lg transition-colors cursor-pointer"
+                            title="Purchase / Add Stock"
+                          >
+                            + Stock
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedForAdjust(m)}
+                            className="px-2.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/60 rounded-lg transition-colors cursor-pointer"
+                            title="Manual Stock Adjustment"
+                          >
+                            Adjust
+                          </button>
+                          <Link
+                            href={`/inventory/${m.material_id}`}
+                            className="px-2.5 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50/70 hover:bg-blue-100 dark:bg-blue-950/40 border border-blue-200/70 dark:border-blue-800/60 rounded-lg transition-colors"
+                          >
+                            View
+                          </Link>
+                          <Link
+                            href={`/inventory/${m.material_id}/edit`}
+                            className="px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white hover:bg-gray-50 dark:bg-[#1A1A1E] dark:hover:bg-[#222227] border border-gray-200 dark:border-[#2E2E34] rounded-lg transition-colors"
+                          >
+                            Edit
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 

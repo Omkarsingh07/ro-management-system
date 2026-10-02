@@ -71,7 +71,7 @@ export default function CustomerForm({
       )}
 
       {/* ── SECTION 1: Contact ── */}
-      <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-6 shadow-xs">
+      <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-4 sm:p-6 shadow-xs">
         <div className="pb-4 mb-5 border-b border-gray-100 dark:border-[#1E1E22]">
           <h2 className="text-sm font-semibold text-gray-900 dark:text-[#F3F4F6]">
             Contact
@@ -129,7 +129,7 @@ export default function CustomerForm({
       </div>
 
       {/* ── SECTION 2: Address ── */}
-      <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-6 shadow-xs">
+      <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-4 sm:p-6 shadow-xs">
         <div className="pb-4 mb-5 border-b border-gray-100 dark:border-[#1E1E22]">
           <h2 className="text-sm font-semibold text-gray-900 dark:text-[#F3F4F6]">
             Address
@@ -170,7 +170,7 @@ export default function CustomerForm({
       </div>
 
       {/* ── SECTION 3: RO Equipment ── */}
-      <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-6 shadow-xs">
+      <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-4 sm:p-6 shadow-xs">
         <div className="pb-4 mb-5 border-b border-gray-100 dark:border-[#1E1E22]">
           <h2 className="text-sm font-semibold text-gray-900 dark:text-[#F3F4F6]">
             RO Equipment
@@ -240,7 +240,7 @@ export default function CustomerForm({
       </div>
 
       {/* ── SECTION 4: Notes ── */}
-      <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-6 shadow-xs">
+      <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200/80 dark:border-[#26262B] p-4 sm:p-6 shadow-xs">
         <div className="pb-4 mb-5 border-b border-gray-100 dark:border-[#1E1E22]">
           <h2 className="text-sm font-semibold text-gray-900 dark:text-[#F3F4F6]">
             Notes
@@ -263,19 +263,19 @@ export default function CustomerForm({
       </div>
 
       {/* ── Actions ── */}
-      <div className="flex items-center justify-end gap-3 pt-2">
+      <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2">
         <button
           type="button"
           onClick={onCancel}
           disabled={submitting}
-          className="px-5 py-2.5 rounded-xl border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#222226] disabled:opacity-50 transition-colors cursor-pointer shadow-2xs"
+          className="px-5 py-2.5 rounded-xl border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#222226] disabled:opacity-50 transition-colors cursor-pointer shadow-2xs text-center"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={submitting}
-          className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold shadow-sm hover:shadow transition-all disabled:opacity-50 cursor-pointer flex items-center gap-2"
+          className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold shadow-sm hover:shadow transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 text-center"
         >
           {submitting ? "Saving…" : submitLabel}
         </button>

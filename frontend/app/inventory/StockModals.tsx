@@ -113,8 +113,8 @@ export function PurchaseStockModal({ material, isOpen, onClose, onSuccess }: Pur
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-xl shadow-xl max-w-md w-full p-6 text-gray-900 dark:text-[#F3F4F6]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6">
+      <div className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-2xl shadow-xl max-w-md w-full p-5 sm:p-6 text-gray-900 dark:text-[#F3F4F6] max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-[#F3F4F6]">Purchase Stock</h3>
@@ -295,8 +295,8 @@ export function AdjustStockModal({ material, isOpen, onClose, onSuccess }: Adjus
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-xl shadow-xl max-w-md w-full p-6 text-gray-900 dark:text-[#F3F4F6]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6">
+      <div className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-2xl shadow-xl max-w-md w-full p-5 sm:p-6 text-gray-900 dark:text-[#F3F4F6] max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-[#F3F4F6]">Adjust Stock</h3>

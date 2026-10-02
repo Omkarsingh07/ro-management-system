@@ -276,95 +276,177 @@ export default function ServicesPage() {
         );
 
         return (
-          <div className="rounded-xl border border-gray-200 dark:border-[#26262B] bg-white dark:bg-[#121214] overflow-hidden shadow-xs">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left divide-y divide-gray-100 dark:divide-[#26262B]">
-                <thead className="bg-gray-50/75 dark:bg-[#161619] border-b border-gray-200 dark:border-[#26262B]">
-                  <tr>
-                    {["Service ID", "Customer", "Service Date", "Service Type", "Technician", "Total Amount", "Payment", "Status", "Actions"].map(
-                      (h) => (
-                        <th
-                          key={h}
-                          className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap"
-                        >
-                          {h}
-                        </th>
-                      )
-                    )}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-[#222227] text-sm">
-                  {paginatedServices.map((s) => (
-                    <tr key={s.service_id} className="hover:bg-gray-50/60 dark:hover:bg-[#17171A]/60 transition-colors">
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <Link
-                          href={`/services/${s.service_id}`}
-                          className="font-mono text-xs font-semibold px-2 py-1 rounded-md bg-gray-100 dark:bg-[#1A1A1E] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2E2E34] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                        >
-                          {s.service_id}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <Link
-                          href={`/customers/${s.customer_id}`}
-                          className="font-mono text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-                        >
-                          {s.customer_id}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap text-gray-700 dark:text-gray-300 font-medium">
-                        {s.service_date ?? "—"}
-                      </td>
-                      <td className="px-4 py-3.5 font-semibold text-gray-900 dark:text-[#F3F4F6]">
+          <div className="space-y-4">
+            {/* Mobile Card View (< 768px) */}
+            <div className="block md:hidden space-y-3">
+              {paginatedServices.map((s) => (
+                <div
+                  key={`mobile-${s.service_id}`}
+                  className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-2xl p-4 shadow-xs space-y-3 transition-colors"
+                >
+                  {/* Top row: Service ID + Status + Payment */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/services/${s.service_id}`}
+                        className="font-mono text-xs font-bold px-2 py-1 rounded-md bg-gray-100 dark:bg-[#1E1E22] text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-[#2E2E34] hover:text-blue-600 dark:hover:text-blue-400"
+                      >
+                        {s.service_id}
+                      </Link>
+                      <PaymentBadge status={s.payment_status} />
+                    </div>
+                    <ServiceStatusBadge status={s.status} completionStatus={s.completion_status} />
+                  </div>
+
+                  {/* Middle row: Customer & Service Type */}
+                  <div className="flex items-start justify-between gap-2 pt-1 border-t border-gray-100 dark:border-[#1E1E22]">
+                    <div>
+                      <span className="text-[10px] uppercase font-semibold text-gray-400 dark:text-gray-500 block">
+                        Service Type
+                      </span>
+                      <h3 className="font-bold text-gray-900 dark:text-[#F3F4F6] text-sm">
                         {s.service_type}
-                      </td>
-                      <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-medium">
-                        {s.technician ? (
-                          <span className="inline-flex items-center gap-1.5 font-medium text-gray-800 dark:text-gray-200">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                            <span>{s.technician}</span>
-                          </span>
-                        ) : (
-                          <span className="text-gray-400">—</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3.5 text-gray-900 dark:text-[#F3F4F6] font-bold whitespace-nowrap">
+                      </h3>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-2">
+                        <span>📅 {s.service_date || "—"}</span>
+                        {s.technician && <span>• 👤 {s.technician}</span>}
+                      </div>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <span className="text-[10px] uppercase font-semibold text-gray-400 dark:text-gray-500 block">
+                        Customer
+                      </span>
+                      <Link
+                        href={`/customers/${s.customer_id}`}
+                        className="font-mono text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline block mt-0.5"
+                      >
+                        {s.customer_id}
+                      </Link>
+                      <span className="font-bold text-gray-900 dark:text-white text-base block mt-0.5">
                         ₹{s.total_amount.toLocaleString("en-IN")}
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <PaymentBadge status={s.payment_status} />
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <ServiceStatusBadge status={s.status} completionStatus={s.completion_status} />
-                      </td>
-                      <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                        <div className="flex items-center justify-end gap-1.5">
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100 dark:border-[#1E1E22]">
+                    <Link
+                      href={`/services/${s.service_id}`}
+                      className="flex-1 text-center py-2 px-3 rounded-xl text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 transition-colors"
+                    >
+                      View Details
+                    </Link>
+                    <Link
+                      href={`/services/${s.service_id}/edit`}
+                      className="py-2 px-3 rounded-xl text-xs font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-[#1A1A1E] border border-gray-200 dark:border-[#2E2E34] transition-colors"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => { setDeleteTarget(s); setDeleteError(null); }}
+                      className="py-2 px-3 rounded-xl text-xs font-semibold text-red-600 dark:text-rose-400 bg-red-50 dark:bg-rose-950/40 border border-red-200 dark:border-rose-900/60 transition-colors cursor-pointer"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View (>= 768px) */}
+            <div className="hidden md:block rounded-xl border border-gray-200 dark:border-[#26262B] bg-white dark:bg-[#121214] overflow-hidden shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left divide-y divide-gray-100 dark:divide-[#26262B]">
+                  <thead className="bg-gray-50/75 dark:bg-[#161619] border-b border-gray-200 dark:border-[#26262B]">
+                    <tr>
+                      {["Service ID", "Customer", "Service Date", "Service Type", "Technician", "Total Amount", "Payment", "Status", "Actions"].map(
+                        (h) => (
+                          <th
+                            key={h}
+                            className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap"
+                          >
+                            {h}
+                          </th>
+                        )
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 dark:divide-[#222227] text-sm">
+                    {paginatedServices.map((s) => (
+                      <tr key={s.service_id} className="hover:bg-gray-50/60 dark:hover:bg-[#17171A]/60 transition-colors">
+                        <td className="px-4 py-3.5 whitespace-nowrap">
                           <Link
                             href={`/services/${s.service_id}`}
-                            className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50/70 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-blue-200/70 dark:border-blue-800/60 transition-colors"
+                            className="font-mono text-xs font-semibold px-2 py-1 rounded-md bg-gray-100 dark:bg-[#1A1A1E] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2E2E34] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                           >
-                            View
+                            {s.service_id}
                           </Link>
+                        </td>
+                        <td className="px-4 py-3.5 whitespace-nowrap">
                           <Link
-                            href={`/services/${s.service_id}/edit`}
-                            className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-200 bg-white hover:bg-gray-50 dark:bg-[#1A1A1E] dark:hover:bg-[#222227] border border-gray-200 dark:border-[#2E2E34] transition-colors"
+                            href={`/customers/${s.customer_id}`}
+                            className="font-mono text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                           >
-                            Edit
+                            {s.customer_id}
                           </Link>
-                          <button
-                            type="button"
-                            onClick={() => { setDeleteTarget(s); setDeleteError(null); }}
-                            className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-rose-400 bg-red-50/70 hover:bg-red-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-red-200/70 dark:border-rose-900/60 transition-colors cursor-pointer"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        </td>
+                        <td className="px-4 py-3.5 whitespace-nowrap text-gray-700 dark:text-gray-300 font-medium">
+                          {s.service_date ?? "—"}
+                        </td>
+                        <td className="px-4 py-3.5 font-semibold text-gray-900 dark:text-[#F3F4F6]">
+                          {s.service_type}
+                        </td>
+                        <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-medium">
+                          {s.technician ? (
+                            <span className="inline-flex items-center gap-1.5 font-medium text-gray-800 dark:text-gray-200">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              <span>{s.technician}</span>
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3.5 text-gray-900 dark:text-[#F3F4F6] font-bold whitespace-nowrap">
+                          ₹{s.total_amount.toLocaleString("en-IN")}
+                        </td>
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <PaymentBadge status={s.payment_status} />
+                        </td>
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <ServiceStatusBadge status={s.status} completionStatus={s.completion_status} />
+                        </td>
+                        <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <Link
+                              href={`/services/${s.service_id}`}
+                              className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50/70 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-blue-200/70 dark:border-blue-800/60 transition-colors"
+                            >
+                              View
+                            </Link>
+                            <Link
+                              href={`/services/${s.service_id}/edit`}
+                              className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-200 bg-white hover:bg-gray-50 dark:bg-[#1A1A1E] dark:hover:bg-[#222227] border border-gray-200 dark:border-[#2E2E34] transition-colors"
+                            >
+                              Edit
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => { setDeleteTarget(s); setDeleteError(null); }}
+                              className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-rose-400 bg-red-50/70 hover:bg-red-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-red-200/70 dark:border-rose-900/60 transition-colors cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
+
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

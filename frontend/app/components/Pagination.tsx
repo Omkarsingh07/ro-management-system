@@ -66,7 +66,7 @@ export function Pagination({
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center gap-1.5 self-end sm:self-center">
+        <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 w-full sm:w-auto">
           {/* Previous */}
           <button
             type="button"

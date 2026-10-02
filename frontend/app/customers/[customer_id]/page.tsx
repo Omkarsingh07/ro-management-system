@@ -9,13 +9,28 @@ import { Pagination } from "@/app/components/Pagination";
 
 const PAGE_SIZE = 10;
 
-function Field({ label, value }: { label: string; value: string | null }) {
+function Field({ label, value, isPhone }: { label: string; value: string | null; isPhone?: boolean }) {
   return (
     <div className="flex flex-col gap-0.5">
       <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
         {label}
       </dt>
-      <dd className="text-sm font-medium text-gray-900 dark:text-[#F3F4F6]">{value || "—"}</dd>
+      <dd className="text-sm font-medium text-gray-900 dark:text-[#F3F4F6]">
+        {value ? (
+          isPhone ? (
+            <a
+              href={`tel:${value}`}
+              className="text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1 font-semibold"
+            >
+              📞 {value}
+            </a>
+          ) : (
+            value
+          )
+        ) : (
+          "—"
+        )}
+      </dd>
     </div>
   );
 }
@@ -104,7 +119,7 @@ export default function CustomerDetailPage() {
   return (
     <>
       {/* ── Page header ── */}
-      <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <Link
             href="/customers"
@@ -112,24 +127,24 @@ export default function CustomerDetailPage() {
           >
             ← Customers
           </Link>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-[#F3F4F6] mt-1 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-[#F3F4F6] mt-1 tracking-tight">
             {customer.name}
           </h1>
-          <p className="text-sm text-gray-400 dark:text-gray-500 font-mono">{customer.customer_id}</p>
+          <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 font-mono">{customer.customer_id}</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href={`/customers/${customer.customer_id}/edit`}
-            className="rounded-md border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#222226] transition-colors"
+            className="flex-1 sm:flex-initial text-center rounded-xl border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] px-4 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#222226] transition-colors"
           >
-            Edit
+            Edit Profile
           </Link>
           <button
             onClick={() => {
               setShowConfirm(true);
               setDeleteError(null);
             }}
-            className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-colors cursor-pointer"
+            className="flex-1 sm:flex-initial text-center rounded-xl bg-red-600 px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-red-700 transition-colors cursor-pointer"
           >
             Delete
           </button>
@@ -137,13 +152,13 @@ export default function CustomerDetailPage() {
       </div>
 
       {/* ── Details card ── */}
-      <div className="bg-white dark:bg-[#121214] rounded-xl border border-gray-200 dark:border-[#26262B] p-6 shadow-xs">
+      <div className="bg-white dark:bg-[#121214] rounded-2xl border border-gray-200 dark:border-[#26262B] p-4 sm:p-6 shadow-xs">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-5">Customer Details</h2>
         <dl className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
           <Field label="Customer ID" value={customer.customer_id} />
           <Field label="Name" value={customer.name} />
-          <Field label="Mobile" value={customer.mobile} />
-          <Field label="Alternate Mobile" value={customer.alternate_mobile} />
+          <Field label="Mobile" value={customer.mobile} isPhone />
+          <Field label="Alternate Mobile" value={customer.alternate_mobile} isPhone />
           <Field label="Area" value={customer.area} />
           <Field label="Technician" value={customer.technician} />
           <Field label="RO Brand" value={customer.ro_brand} />
@@ -190,59 +205,110 @@ export default function CustomerDetailPage() {
             servicesPage * PAGE_SIZE
           );
           return (
-            <div className="rounded-xl border border-gray-200 dark:border-[#26262B] bg-white dark:bg-[#121214] overflow-hidden shadow-xs">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm divide-y divide-gray-100 dark:divide-[#26262B]">
-                  <thead className="bg-gray-50/75 dark:bg-[#17171A]">
-                    <tr>
-                      {["ID", "Date", "Service Type", "Technician", "Amount", "Status", "Completion", "Actions"].map((h) => (
-                        <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]">
-                    {paginatedServices.map((s) => {
-                      const statusColors: Record<string, string> = {
-                        DUE_TODAY: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20",
-                        OVERDUE: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20",
-                        UPCOMING: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20",
-                      };
-                      const statusLabels: Record<string, string> = { DUE_TODAY: "Due Today", OVERDUE: "Overdue", UPCOMING: "Upcoming" };
-                      return (
-                        <tr key={s.service_id} className="hover:bg-gray-50/60 dark:hover:bg-[#1A1A1D]/60 transition-colors">
-                          <td className="px-4 py-3.5 font-mono text-xs font-semibold text-gray-600 dark:text-gray-300">{s.service_id}</td>
-                          <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-medium">{s.service_date ?? "—"}</td>
-                          <td className="px-4 py-3.5 text-gray-900 dark:text-[#F3F4F6] font-semibold">{s.service_type}</td>
-                          <td className="px-4 py-3.5 text-gray-600 dark:text-gray-300 font-medium">{s.technician || "—"}</td>
-                          <td className="px-4 py-3.5 text-gray-900 dark:text-[#F3F4F6] font-bold whitespace-nowrap">₹{s.total_amount.toLocaleString("en-IN")}</td>
-                          <td className="px-4 py-3.5">
-                            {s.status ? (
-                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${statusColors[s.status] ?? ""}`}>
-                                {statusLabels[s.status] ?? s.status}
+            <div className="space-y-3">
+              {/* Mobile Card View (< 768px) */}
+              <div className="block md:hidden space-y-2.5">
+                {paginatedServices.map((s) => (
+                  <div
+                    key={`mob-cust-svc-${s.service_id}`}
+                    className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-xl p-3.5 shadow-xs space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-gray-100 dark:bg-[#1E1E22] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2C2C32]">
+                        {s.service_id}
+                      </span>
+                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium border ${
+                        s.completion_status === "COMPLETED"
+                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                          : "bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-500/20"
+                      }`}>
+                        {s.completion_status === "COMPLETED" ? "Completed" : "Pending"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-start justify-between gap-2 pt-1 border-t border-gray-100 dark:border-[#1E1E22]">
+                      <div>
+                        <p className="font-bold text-gray-900 dark:text-[#F3F4F6] text-xs">
+                          {s.service_type}
+                        </p>
+                        <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
+                          📅 {s.service_date || "—"} {s.technician && `• 👤 ${s.technician}`}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-bold text-gray-900 dark:text-white text-sm">
+                          ₹{s.total_amount.toLocaleString("en-IN")}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-1 border-t border-gray-100 dark:border-[#1E1E22] flex justify-end">
+                      <Link
+                        href={`/services/${s.service_id}`}
+                        className="w-full text-center py-1.5 px-3 rounded-lg text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 transition-colors"
+                      >
+                        View Details
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View (>= 768px) */}
+              <div className="hidden md:block rounded-xl border border-gray-200 dark:border-[#26262B] bg-white dark:bg-[#121214] overflow-hidden shadow-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm divide-y divide-gray-100 dark:divide-[#26262B]">
+                    <thead className="bg-gray-50/75 dark:bg-[#17171A]">
+                      <tr>
+                        {["ID", "Date", "Service Type", "Technician", "Amount", "Status", "Completion", "Actions"].map((h) => (
+                          <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]">
+                      {paginatedServices.map((s) => {
+                        const statusColors: Record<string, string> = {
+                          DUE_TODAY: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20",
+                          OVERDUE: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20",
+                          UPCOMING: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20",
+                        };
+                        const statusLabels: Record<string, string> = { DUE_TODAY: "Due Today", OVERDUE: "Overdue", UPCOMING: "Upcoming" };
+                        return (
+                          <tr key={s.service_id} className="hover:bg-gray-50/60 dark:hover:bg-[#1A1A1D]/60 transition-colors">
+                            <td className="px-4 py-3.5 font-mono text-xs font-semibold text-gray-600 dark:text-gray-300">{s.service_id}</td>
+                            <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-medium">{s.service_date ?? "—"}</td>
+                            <td className="px-4 py-3.5 text-gray-900 dark:text-[#F3F4F6] font-semibold">{s.service_type}</td>
+                            <td className="px-4 py-3.5 text-gray-600 dark:text-gray-300 font-medium">{s.technician || "—"}</td>
+                            <td className="px-4 py-3.5 text-gray-900 dark:text-[#F3F4F6] font-bold whitespace-nowrap">₹{s.total_amount.toLocaleString("en-IN")}</td>
+                            <td className="px-4 py-3.5">
+                              {s.status ? (
+                                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${statusColors[s.status] ?? ""}`}>
+                                  {statusLabels[s.status] ?? s.status}
+                                </span>
+                              ) : "—"}
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${
+                                s.completion_status === "COMPLETED"
+                                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                                  : "bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-500/20"
+                              }`}>
+                                {s.completion_status === "COMPLETED" ? "Completed" : "Pending"}
                               </span>
-                            ) : "—"}
-                          </td>
-                          <td className="px-4 py-3.5">
-                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${
-                              s.completion_status === "COMPLETED"
-                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                                : "bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-500/20"
-                            }`}>
-                              {s.completion_status === "COMPLETED" ? "Completed" : "Pending"}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3.5 whitespace-nowrap">
-                            <Link href={`/services/${s.service_id}`} className="inline-flex items-center justify-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
-                              View
-                            </Link>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                            </td>
+                            <td className="px-4 py-3.5 whitespace-nowrap">
+                              <Link href={`/services/${s.service_id}`} className="inline-flex items-center justify-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+                                View
+                              </Link>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               {services.length > PAGE_SIZE && (

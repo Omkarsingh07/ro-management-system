@@ -238,125 +238,235 @@ export default function CustomersPage() {
         </div>
       )}
 
-      {/* ── Table ── */}
+      {/* ── Customer Records (Responsive: Cards on Mobile, Table on Desktop) ── */}
       {!loading && !error && customers.length > 0 && (
-        <div className="rounded-xl border border-gray-200 dark:border-[#26262B] bg-white dark:bg-[#121214] overflow-hidden shadow-xs">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left divide-y divide-gray-100 dark:divide-[#26262B]">
-              <thead className="bg-gray-50/75 dark:bg-[#161619] border-b border-gray-200 dark:border-[#26262B]">
-                <tr>
-                  <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
-                    Customer ID
-                  </th>
-                  <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
-                    Customer Name
-                  </th>
-                  <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
-                    Mobile Number
-                  </th>
-                  <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
-                    Area / Location
-                  </th>
-                  <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
-                    Purifier Machine
-                  </th>
-                  <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
-                    Assigned Technician
-                  </th>
-                  <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap text-right">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-[#222227] text-sm">
-                {paginatedCustomers.map((c) => {
-                  const initial = c.name ? c.name.charAt(0).toUpperCase() : "C";
-                  return (
-                    <tr key={c.customer_id} className="hover:bg-gray-50/60 dark:hover:bg-[#17171A]/60 transition-colors group">
-                      <td className="px-4 py-3.5 whitespace-nowrap">
+        <div className="space-y-4">
+          {/* Mobile Card View (< 768px) */}
+          <div className="block md:hidden space-y-3">
+            {paginatedCustomers.map((c) => {
+              const initial = c.name ? c.name.charAt(0).toUpperCase() : "C";
+              return (
+                <div
+                  key={`mobile-${c.customer_id}`}
+                  className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-2xl p-4 shadow-xs space-y-3 transition-colors"
+                >
+                  {/* Top row: Initial, Name, and Customer ID */}
+                  <div className="flex items-start justify-between gap-2.5">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 font-bold text-sm flex items-center justify-center shrink-0 border border-blue-200/60 dark:border-blue-900/60">
+                        {initial}
+                      </div>
+                      <div className="min-w-0">
                         <Link
                           href={`/customers/${c.customer_id}`}
-                          className="font-mono text-xs font-semibold px-2 py-1 rounded-md bg-gray-100 dark:bg-[#1A1A1E] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2E2E34] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                          className="font-bold text-gray-900 dark:text-[#F3F4F6] text-sm hover:text-blue-600 dark:hover:text-blue-400 truncate block"
                         >
-                          {c.customer_id}
+                          {c.name}
                         </Link>
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-bold text-xs flex items-center justify-center shrink-0 border border-blue-200/50 dark:border-blue-900/50">
-                            {initial}
-                          </div>
-                          <Link
-                            href={`/customers/${c.customer_id}`}
-                            className="font-semibold text-gray-900 dark:text-[#F3F4F6] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                          >
-                            {c.name}
-                          </Link>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <span className="font-mono text-gray-700 dark:text-gray-300 font-medium">
-                          {c.mobile || "—"}
+                        <span className="font-mono text-[11px] text-gray-500 dark:text-gray-400">
+                          ID: {c.customer_id}
                         </span>
-                      </td>
-                      <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap">
-                        {c.area ? (
-                          <span className="inline-flex items-center gap-1">
-                            <span className="text-gray-400 text-xs">📍</span>
-                            <span>{c.area}</span>
-                          </span>
-                        ) : "—"}
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        {c.ro_brand || c.ro_model ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-[#1C1C20] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2E2E34]">
-                            <span className="font-semibold">{c.ro_brand}</span>
-                            {c.ro_model && <span className="text-gray-500 dark:text-gray-400">• {c.ro_model}</span>}
-                          </span>
-                        ) : "—"}
-                      </td>
-                      <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap">
-                        {c.technician ? (
-                          <span className="inline-flex items-center gap-1.5 font-medium text-gray-800 dark:text-gray-200">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                            <span>{c.technician}</span>
-                          </span>
-                        ) : (
-                          <span className="text-gray-400">—</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                        <div className="flex items-center justify-end gap-1.5">
+                      </div>
+                    </div>
+
+                    {c.technician && (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-200/60 dark:border-emerald-900/50 shrink-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        {c.technician}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Middle row: Phone & Location */}
+                  <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-gray-100 dark:border-[#1E1E22]">
+                    <div>
+                      <span className="text-[10px] uppercase font-semibold text-gray-400 dark:text-gray-500 block">
+                        Phone
+                      </span>
+                      {c.mobile ? (
+                        <a
+                          href={`tel:${c.mobile}`}
+                          className="font-mono font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 mt-0.5"
+                        >
+                          <span>📞</span>
+                          <span>{c.mobile}</span>
+                        </a>
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
+                    </div>
+
+                    <div>
+                      <span className="text-[10px] uppercase font-semibold text-gray-400 dark:text-gray-500 block">
+                        Area
+                      </span>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium truncate block mt-0.5">
+                        {c.area ? `📍 ${c.area}` : "—"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Machine Details Badge */}
+                  {(c.ro_brand || c.ro_model) && (
+                    <div className="bg-gray-50/80 dark:bg-[#17171A] rounded-lg px-2.5 py-1.5 text-xs text-gray-700 dark:text-gray-300 border border-gray-200/60 dark:border-[#222227] flex items-center justify-between">
+                      <span className="text-gray-500 dark:text-gray-400 text-[11px]">RO Machine:</span>
+                      <span className="font-semibold text-gray-900 dark:text-white">
+                        {c.ro_brand} {c.ro_model && `• ${c.ro_model}`}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Action buttons */}
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100 dark:border-[#1E1E22]">
+                    <Link
+                      href={`/customers/${c.customer_id}`}
+                      className="flex-1 text-center py-2 px-3 rounded-xl text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 transition-colors"
+                    >
+                      View Profile
+                    </Link>
+                    <Link
+                      href={`/customers/${c.customer_id}/edit`}
+                      className="py-2 px-3 rounded-xl text-xs font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-[#1A1A1E] border border-gray-200 dark:border-[#2E2E34] transition-colors"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDeleteTarget(c);
+                        setDeleteError(null);
+                      }}
+                      className="py-2 px-3 rounded-xl text-xs font-semibold text-red-600 dark:text-rose-400 bg-red-50 dark:bg-rose-950/40 border border-red-200 dark:border-rose-900/60 transition-colors cursor-pointer"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop Table View (>= 768px) */}
+          <div className="hidden md:block rounded-xl border border-gray-200 dark:border-[#26262B] bg-white dark:bg-[#121214] overflow-hidden shadow-xs">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left divide-y divide-gray-100 dark:divide-[#26262B]">
+                <thead className="bg-gray-50/75 dark:bg-[#161619] border-b border-gray-200 dark:border-[#26262B]">
+                  <tr>
+                    <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
+                      Customer ID
+                    </th>
+                    <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
+                      Customer Name
+                    </th>
+                    <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
+                      Mobile Number
+                    </th>
+                    <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
+                      Area / Location
+                    </th>
+                    <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
+                      Purifier Machine
+                    </th>
+                    <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap">
+                      Assigned Technician
+                    </th>
+                    <th className="px-4 py-3 font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-xs whitespace-nowrap text-right">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-[#222227] text-sm">
+                  {paginatedCustomers.map((c) => {
+                    const initial = c.name ? c.name.charAt(0).toUpperCase() : "C";
+                    return (
+                      <tr key={c.customer_id} className="hover:bg-gray-50/60 dark:hover:bg-[#17171A]/60 transition-colors group">
+                        <td className="px-4 py-3.5 whitespace-nowrap">
                           <Link
                             href={`/customers/${c.customer_id}`}
-                            className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50/70 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-blue-200/70 dark:border-blue-800/60 transition-colors"
+                            className="font-mono text-xs font-semibold px-2 py-1 rounded-md bg-gray-100 dark:bg-[#1A1A1E] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2E2E34] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                           >
-                            View
+                            {c.customer_id}
                           </Link>
-                          <Link
-                            href={`/customers/${c.customer_id}/edit`}
-                            className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-200 bg-white hover:bg-gray-50 dark:bg-[#1A1A1E] dark:hover:bg-[#222227] border border-gray-200 dark:border-[#2E2E34] transition-colors"
-                          >
-                            Edit
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setDeleteTarget(c);
-                              setDeleteError(null);
-                            }}
-                            className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-rose-400 bg-red-50/70 hover:bg-red-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-red-200/70 dark:border-rose-900/60 transition-colors cursor-pointer"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        </td>
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-bold text-xs flex items-center justify-center shrink-0 border border-blue-200/50 dark:border-blue-900/50">
+                              {initial}
+                            </div>
+                            <Link
+                              href={`/customers/${c.customer_id}`}
+                              className="font-semibold text-gray-900 dark:text-[#F3F4F6] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                            >
+                              {c.name}
+                            </Link>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <span className="font-mono text-gray-700 dark:text-gray-300 font-medium">
+                            {c.mobile || "—"}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                          {c.area ? (
+                            <span className="inline-flex items-center gap-1">
+                              <span className="text-gray-400 text-xs">📍</span>
+                              <span>{c.area}</span>
+                            </span>
+                          ) : "—"}
+                        </td>
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          {c.ro_brand || c.ro_model ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-[#1C1C20] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2E2E34]">
+                              <span className="font-semibold">{c.ro_brand}</span>
+                              {c.ro_model && <span className="text-gray-500 dark:text-gray-400">• {c.ro_model}</span>}
+                            </span>
+                          ) : "—"}
+                        </td>
+                        <td className="px-4 py-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                          {c.technician ? (
+                            <span className="inline-flex items-center gap-1.5 font-medium text-gray-800 dark:text-gray-200">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              <span>{c.technician}</span>
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <Link
+                              href={`/customers/${c.customer_id}`}
+                              className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50/70 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-blue-200/70 dark:border-blue-800/60 transition-colors"
+                            >
+                              View
+                            </Link>
+                            <Link
+                              href={`/customers/${c.customer_id}/edit`}
+                              className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-200 bg-white hover:bg-gray-50 dark:bg-[#1A1A1E] dark:hover:bg-[#222227] border border-gray-200 dark:border-[#2E2E34] transition-colors"
+                            >
+                              Edit
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setDeleteTarget(c);
+                                setDeleteError(null);
+                              }}
+                              className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-rose-400 bg-red-50/70 hover:bg-red-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-red-200/70 dark:border-rose-900/60 transition-colors cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
+
+          {/* Pagination */}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

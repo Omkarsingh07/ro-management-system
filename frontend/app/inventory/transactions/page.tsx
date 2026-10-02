@@ -199,43 +199,50 @@ function TransactionsContent() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
-              <thead className="bg-gray-50/75 dark:bg-[#161619] text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-[#26262B]">
-                <tr>
-                  <th className="px-4 py-3 whitespace-nowrap">Tx ID</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Date</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Material</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Transaction Type</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Quantity</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Reference ID</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Notes / Reason</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]/60 text-sm">
-                {paginatedTransactions.map((tx) => {
-                  const mat = materialMap.get(tx.material_id);
-                  const isPositive = tx.quantity > 0;
-                  return (
-                    <tr key={tx.transaction_id} className="hover:bg-gray-50/60 dark:hover:bg-[#17171A]/60 transition-colors">
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <span className="font-mono text-xs font-semibold px-2 py-1 rounded-md bg-gray-100 dark:bg-[#1E1E22] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2C2C32]">
-                          {tx.transaction_id}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3.5 text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap font-medium">{tx.date}</td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
+          <div className="space-y-4">
+            {/* Mobile Card View (< 768px) */}
+            <div className="block md:hidden p-3 space-y-3">
+              {paginatedTransactions.map((tx) => {
+                const mat = materialMap.get(tx.material_id);
+                const isPositive = tx.quantity > 0;
+                return (
+                  <div
+                    key={`mobile-tx-${tx.transaction_id}`}
+                    className="bg-white dark:bg-[#121214] border border-gray-200 dark:border-[#26262B] rounded-2xl p-4 shadow-xs space-y-2.5 transition-colors"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded-md bg-gray-100 dark:bg-[#1E1E22] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2C2C32]">
+                        #{tx.transaction_id}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                        📅 {tx.date}
+                      </span>
+                    </div>
+
+                    <div className="flex items-start justify-between gap-2 pt-1 border-t border-gray-100 dark:border-[#1E1E22]">
+                      <div>
                         <Link
                           href={`/inventory/${encodeURIComponent(tx.material_id)}`}
-                          className="font-semibold text-gray-900 dark:text-[#F3F4F6] hover:text-blue-600 dark:hover:text-blue-400 hover:underline block"
+                          className="font-bold text-gray-900 dark:text-[#F3F4F6] text-sm hover:underline block"
                         >
                           {mat ? mat.material_name : tx.material_id}
                         </Link>
-                        <span className="font-mono text-xs text-gray-400 dark:text-gray-500">{tx.material_id}</span>
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <span className="font-mono text-xs text-gray-400 dark:text-gray-500">
+                          {tx.material_id}
+                        </span>
+                      </div>
+
+                      <div className="text-right">
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                          className={`font-bold text-base block ${
+                            isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
+                          }`}
+                        >
+                          {isPositive ? `+${tx.quantity}` : tx.quantity}{" "}
+                          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">{mat?.unit || ""}</span>
+                        </span>
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border mt-1 ${
                             tx.transaction_type === "PURCHASE" || tx.transaction_type === "OPENING_STOCK"
                               ? "bg-green-50 dark:bg-emerald-950/30 text-green-700 dark:text-emerald-400 border-green-200 dark:border-emerald-900/50"
                               : tx.transaction_type === "SERVICE_USAGE"
@@ -245,39 +252,119 @@ function TransactionsContent() {
                         >
                           {tx.transaction_type}
                         </span>
-                      </td>
-                      <td
-                        className={`px-4 py-3.5 text-right font-bold whitespace-nowrap ${
-                          isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
-                        }`}
-                      >
-                        {isPositive ? `+${tx.quantity}` : tx.quantity}{" "}
-                        <span className="text-xs font-normal text-gray-500 dark:text-gray-400">{mat?.unit || ""}</span>
-                      </td>
-                      <td className="px-4 py-3.5 text-sm whitespace-nowrap">
-                        {tx.reference_id ? (
-                          tx.transaction_type === "SERVICE_USAGE" ? (
-                            <Link
-                              href={`/services/${encodeURIComponent(tx.reference_id)}`}
-                              className="font-mono text-blue-600 dark:text-blue-400 hover:underline font-semibold"
-                            >
-                              {tx.reference_id}
-                            </Link>
-                          ) : (
-                            <span className="text-gray-700 dark:text-gray-300 font-medium">{tx.reference_id}</span>
-                          )
-                        ) : (
-                          <span className="text-gray-400 dark:text-gray-500">—</span>
+                      </div>
+                    </div>
+
+                    {(tx.reference_id || tx.notes) && (
+                      <div className="bg-gray-50/80 dark:bg-[#17171A] p-2 rounded-lg text-xs text-gray-600 dark:text-gray-300 border border-gray-100 dark:border-[#222227] space-y-0.5">
+                        {tx.reference_id && (
+                          <div>
+                            <span className="text-gray-400 text-[10px] uppercase font-semibold mr-1">Ref:</span>
+                            {tx.transaction_type === "SERVICE_USAGE" ? (
+                              <Link
+                                href={`/services/${encodeURIComponent(tx.reference_id)}`}
+                                className="font-mono text-blue-600 dark:text-blue-400 hover:underline font-semibold"
+                              >
+                                {tx.reference_id}
+                              </Link>
+                            ) : (
+                              <span className="font-mono font-medium">{tx.reference_id}</span>
+                            )}
+                          </div>
                         )}
-                      </td>
-                      <td className="px-4 py-3.5 text-sm text-gray-700 dark:text-gray-300">
-                        {tx.notes || "—"}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        {tx.notes && (
+                          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                            {tx.notes}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View (>= 768px) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
+                <thead className="bg-gray-50/75 dark:bg-[#161619] text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-[#26262B]">
+                  <tr>
+                    <th className="px-4 py-3 whitespace-nowrap">Tx ID</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Date</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Material</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Transaction Type</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Quantity</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Reference ID</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Notes / Reason</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]/60 text-sm">
+                  {paginatedTransactions.map((tx) => {
+                    const mat = materialMap.get(tx.material_id);
+                    const isPositive = tx.quantity > 0;
+                    return (
+                      <tr key={tx.transaction_id} className="hover:bg-gray-50/60 dark:hover:bg-[#17171A]/60 transition-colors">
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <span className="font-mono text-xs font-semibold px-2 py-1 rounded-md bg-gray-100 dark:bg-[#1E1E22] text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-[#2C2C32]">
+                            {tx.transaction_id}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3.5 text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap font-medium">{tx.date}</td>
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <Link
+                            href={`/inventory/${encodeURIComponent(tx.material_id)}`}
+                            className="font-semibold text-gray-900 dark:text-[#F3F4F6] hover:text-blue-600 dark:hover:text-blue-400 hover:underline block"
+                          >
+                            {mat ? mat.material_name : tx.material_id}
+                          </Link>
+                          <span className="font-mono text-xs text-gray-400 dark:text-gray-500">{tx.material_id}</span>
+                        </td>
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                              tx.transaction_type === "PURCHASE" || tx.transaction_type === "OPENING_STOCK"
+                                ? "bg-green-50 dark:bg-emerald-950/30 text-green-700 dark:text-emerald-400 border-green-200 dark:border-emerald-900/50"
+                                : tx.transaction_type === "SERVICE_USAGE"
+                                ? "bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-900/50"
+                                : "bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900/50"
+                            }`}
+                          >
+                            {tx.transaction_type}
+                          </span>
+                        </td>
+                        <td
+                          className={`px-4 py-3.5 text-right font-bold whitespace-nowrap ${
+                            isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
+                          }`}
+                        >
+                          {isPositive ? `+${tx.quantity}` : tx.quantity}{" "}
+                          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">{mat?.unit || ""}</span>
+                        </td>
+                        <td className="px-4 py-3.5 text-sm whitespace-nowrap">
+                          {tx.reference_id ? (
+                            tx.transaction_type === "SERVICE_USAGE" ? (
+                              <Link
+                                href={`/services/${encodeURIComponent(tx.reference_id)}`}
+                                className="font-mono text-blue-600 dark:text-blue-400 hover:underline font-semibold"
+                              >
+                                {tx.reference_id}
+                              </Link>
+                            ) : (
+                              <span className="text-gray-700 dark:text-gray-300 font-medium">{tx.reference_id}</span>
+                            )
+                          ) : (
+                            <span className="text-gray-400 dark:text-gray-500">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3.5 text-sm text-gray-700 dark:text-gray-300">
+                          {tx.notes || "—"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 

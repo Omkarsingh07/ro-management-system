@@ -99,7 +99,7 @@ export default function EditServicePage() {
         </p>
       </div>
 
-      <div className="bg-white dark:bg-[#121214] rounded-xl border border-gray-200 dark:border-[#26262B] p-6 max-w-3xl shadow-xs">
+      <div className="bg-white dark:bg-[#121214] rounded-xl border border-gray-200 dark:border-[#26262B] p-4 sm:p-6 max-w-3xl shadow-xs">
         {submitError && (
           <div className="mb-5 rounded-md bg-red-50 dark:bg-rose-950/30 border border-red-200 dark:border-rose-900/50 px-4 py-3 text-sm text-red-700 dark:text-rose-400">
             {submitError}
@@ -219,21 +219,21 @@ export default function EditServicePage() {
             <textarea id="notes" name="notes" rows={2} defaultValue={service.notes} className={`${inputCls} resize-none`} />
           </div>
 
-          <div className="flex items-center gap-3 pt-2">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors cursor-pointer"
-            >
-              {submitting ? "Saving…" : "Save Changes"}
-            </button>
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-2">
             <button
               type="button"
               onClick={() => router.push(`/services/${service_id}`)}
               disabled={submitting}
-              className="rounded-md border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] px-5 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#222226] disabled:opacity-50 transition-colors cursor-pointer"
+              className="rounded-xl border border-gray-300 dark:border-[#2E2E34] bg-white dark:bg-[#17171A] px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#222226] disabled:opacity-50 transition-colors cursor-pointer text-center"
             >
               Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition-colors cursor-pointer text-center"
+            >
+              {submitting ? "Saving…" : "Save Changes"}
             </button>
           </div>
         </form>

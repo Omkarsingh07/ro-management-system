@@ -178,7 +178,7 @@ export default function MaterialDetailPage() {
 
       {/* ── Transaction History for this Material ── */}
       <div className="bg-white dark:bg-[#121214] border border-gray-200/80 dark:border-[#26262B] rounded-xl shadow-xs overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100 dark:border-[#26262B] flex items-center justify-between">
+        <div className="px-4 sm:px-5 py-3.5 sm:py-4 border-b border-gray-100 dark:border-[#26262B] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h2 className="text-base font-bold text-gray-900 dark:text-[#F3F4F6] tracking-tight">Stock Transactions History</h2>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Audit trail of purchases and manual adjustments for this material</p>
@@ -196,44 +196,81 @@ export default function MaterialDetailPage() {
             No stock transactions recorded for this material yet.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
-              <thead className="bg-gray-50/75 dark:bg-[#17171A] text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-[#26262B] tracking-wider">
-                <tr>
-                  <th className="px-4 py-3 whitespace-nowrap">Tx ID</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Date</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Type</th>
-                  <th className="px-4 py-3 text-right whitespace-nowrap">Quantity</th>
-                  <th className="px-4 py-3 whitespace-nowrap">Reference #</th>
-                  <th className="px-4 py-3">Notes</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]">
-                {transactions.map((tx) => (
-                  <tr key={tx.transaction_id} className="hover:bg-gray-50/60 dark:hover:bg-[#1A1A1D]/60 transition-colors">
-                    <td className="px-4 py-3.5 font-mono text-xs font-semibold text-gray-900 dark:text-[#F3F4F6] whitespace-nowrap">{tx.transaction_id}</td>
-                    <td className="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-300 whitespace-nowrap font-medium">{tx.date}</td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold shadow-2xs ${
-                        tx.transaction_type === "PURCHASE" || tx.transaction_type === "OPENING_STOCK"
-                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                          : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
-                      }`}>
-                        {tx.transaction_type}
-                      </span>
-                    </td>
-                    <td className={`px-4 py-3.5 text-right font-semibold whitespace-nowrap text-xs ${
+          <>
+            {/* Mobile Transaction Cards (< 640px) */}
+            <div className="block sm:hidden divide-y divide-gray-100 dark:divide-[#26262B]">
+              {transactions.map((tx) => (
+                <div key={`mob-tx-${tx.transaction_id}`} className="p-3.5 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-semibold text-gray-800 dark:text-gray-200">
+                      {tx.transaction_id}
+                    </span>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold ${
+                      tx.transaction_type === "PURCHASE" || tx.transaction_type === "OPENING_STOCK"
+                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                        : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
+                    }`}>
+                      {tx.transaction_type}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-gray-500 dark:text-gray-400">📅 {tx.date}</span>
+                    <span className={`font-bold ${
                       tx.quantity > 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
                     }`}>
                       {tx.quantity > 0 ? `+${tx.quantity}` : tx.quantity} {material.unit}
-                    </td>
-                    <td className="px-4 py-3.5 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{tx.reference_id || "—"}</td>
-                    <td className="px-4 py-3.5 text-xs text-gray-700 dark:text-gray-300">{tx.notes || "—"}</td>
+                    </span>
+                  </div>
+                  {(tx.reference_id || tx.notes) && (
+                    <div className="text-[11px] text-gray-500 dark:text-gray-400 pt-1 border-t border-gray-100 dark:border-[#1E1E22]">
+                      {tx.reference_id && <p>Ref: {tx.reference_id}</p>}
+                      {tx.notes && <p className="italic">"{tx.notes}"</p>}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table (>= 640px) */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
+                <thead className="bg-gray-50/75 dark:bg-[#17171A] text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-[#26262B] tracking-wider">
+                  <tr>
+                    <th className="px-4 py-3 whitespace-nowrap">Tx ID</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Date</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Type</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Quantity</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Reference #</th>
+                    <th className="px-4 py-3">Notes</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-[#26262B]">
+                  {transactions.map((tx) => (
+                    <tr key={tx.transaction_id} className="hover:bg-gray-50/60 dark:hover:bg-[#1A1A1D]/60 transition-colors">
+                      <td className="px-4 py-3.5 font-mono text-xs font-semibold text-gray-900 dark:text-[#F3F4F6] whitespace-nowrap">{tx.transaction_id}</td>
+                      <td className="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-300 whitespace-nowrap font-medium">{tx.date}</td>
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold shadow-2xs ${
+                          tx.transaction_type === "PURCHASE" || tx.transaction_type === "OPENING_STOCK"
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                            : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
+                        }`}>
+                          {tx.transaction_type}
+                        </span>
+                      </td>
+                      <td className={`px-4 py-3.5 text-right font-semibold whitespace-nowrap text-xs ${
+                        tx.quantity > 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
+                      }`}>
+                        {tx.quantity > 0 ? `+${tx.quantity}` : tx.quantity} {material.unit}
+                      </td>
+                      <td className="px-4 py-3.5 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{tx.reference_id || "—"}</td>
+                      <td className="px-4 py-3.5 text-xs text-gray-700 dark:text-gray-300">{tx.notes || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 

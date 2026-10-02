@@ -171,9 +171,9 @@ export default function ReportsPage() {
 
       {/* ── Date Range Selector Bar ── */}
       <div className="bg-white dark:bg-[#121214] border border-gray-200/80 dark:border-[#26262B] rounded-2xl p-4 shadow-xs space-y-3">
-        <form onSubmit={handleApplyRange} className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <div>
+        <form onSubmit={handleApplyRange} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3 w-full sm:w-auto">
+            <div className="flex-1 sm:flex-initial">
               <label htmlFor="from_date" className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
                 From Date
               </label>
@@ -183,10 +183,10 @@ export default function ReportsPage() {
                 value={inputFrom}
                 onChange={(e) => setInputFrom(e.target.value)}
                 required
-                className="border border-gray-200 dark:border-[#2E2E34] rounded-xl px-3 py-1.5 text-xs font-medium bg-gray-50/50 dark:bg-[#17171A] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                className="w-full sm:w-auto border border-gray-200 dark:border-[#2E2E34] rounded-xl px-3 py-1.5 text-xs font-medium bg-gray-50/50 dark:bg-[#17171A] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
               />
             </div>
-            <div>
+            <div className="flex-1 sm:flex-initial">
               <label htmlFor="to_date" className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
                 To Date
               </label>
@@ -196,13 +196,13 @@ export default function ReportsPage() {
                 value={inputTo}
                 onChange={(e) => setInputTo(e.target.value)}
                 required
-                className="border border-gray-200 dark:border-[#2E2E34] rounded-xl px-3 py-1.5 text-xs font-medium bg-gray-50/50 dark:bg-[#17171A] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                className="w-full sm:w-auto border border-gray-200 dark:border-[#2E2E34] rounded-xl px-3 py-1.5 text-xs font-medium bg-gray-50/50 dark:bg-[#17171A] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
               />
             </div>
-            <div className="self-end">
+            <div>
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-xs transition-colors cursor-pointer"
+                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-xs transition-colors cursor-pointer"
               >
                 Apply Range
               </button>
@@ -210,9 +210,9 @@ export default function ReportsPage() {
           </div>
 
           {/* Quick Presets */}
-          <div className="flex flex-wrap items-center gap-1.5 self-end">
+          <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-xs text-gray-400 dark:text-gray-500 mr-1">Presets:</span>
-            <div className="inline-flex p-1 bg-gray-100/80 dark:bg-[#17171A] border border-gray-200/80 dark:border-[#26262B] rounded-xl gap-1">
+            <div className="inline-flex flex-wrap p-1 bg-gray-100/80 dark:bg-[#17171A] border border-gray-200/80 dark:border-[#26262B] rounded-xl gap-1">
               <button
                 type="button"
                 onClick={() => applyPreset("today")}
@@ -287,7 +287,7 @@ export default function ReportsPage() {
               </span>
             </div>
             {/* Export Toolbar */}
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 flex-wrap">
               <span className="text-gray-500 dark:text-gray-400 text-xs">Export:</span>
               <select
                 value={activeExportType}

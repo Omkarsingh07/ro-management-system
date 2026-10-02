@@ -518,7 +518,7 @@ export default function DashboardPage() {
         <section aria-labelledby="section-customers-inventory">
           <SectionHeader>Customers &amp; Inventory</SectionHeader>
 
-          <div className="grid grid-cols-2 lg:grid-cols-12 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-12 gap-3.5 sm:gap-4">
 
             {/* Total Customers — 4 cols, large */}
             <div className="col-span-2 lg:col-span-4">
@@ -537,7 +537,7 @@ export default function DashboardPage() {
             </div>
 
             {/* New This Month — 2 cols */}
-            <div className="lg:col-span-2">
+            <div className="col-span-1 lg:col-span-2">
               <StatCard
                 label="New This Month"
                 value={fmtCount(newCustomersCount)}
@@ -553,7 +553,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Total Services — 3 cols */}
-            <div className="lg:col-span-3">
+            <div className="col-span-1 lg:col-span-3">
               <StatCard
                 label="Total Services"
                 value={fmtCount(allServices.length)}
@@ -569,7 +569,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Inventory Items — 2 cols */}
-            <div className="lg:col-span-2">
+            <div className="col-span-1 lg:col-span-2">
               <StatCard
                 label="Inventory Items"
                 value={fmtCount(materials.length)}
@@ -585,9 +585,9 @@ export default function DashboardPage() {
             </div>
 
             {/* Low Stock — 1 col, compact */}
-            <div className="lg:col-span-1">
+            <div className="col-span-1 lg:col-span-1">
               <StatCard
-                label="Low"
+                label="Low Stock"
                 value={fmtCount(lowStockCount)}
                 rawNumber={lowStockCount}
                 formatter={fmtCount}
@@ -610,7 +610,7 @@ export default function DashboardPage() {
         <section aria-labelledby="section-reminders">
           <SectionHeader>Reminders</SectionHeader>
 
-          <div className="grid grid-cols-2 lg:grid-cols-12 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-12 gap-3.5 sm:gap-4">
 
             {/* Due Today — 4 cols, amber emphasis */}
             <div className="col-span-2 lg:col-span-4">
@@ -634,7 +634,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Due Tomorrow — 2 cols, neutral */}
-            <div className="lg:col-span-2">
+            <div className="col-span-1 lg:col-span-2">
               <StatCard
                 label="Due Tomorrow"
                 value={fmtCount(remindersSummary.tomorrow_count)}
@@ -650,7 +650,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Overdue Reminders — 3 cols, red */}
-            <div className="lg:col-span-3">
+            <div className="col-span-1 lg:col-span-3">
               <StatCard
                 label="Overdue Reminders"
                 value={fmtCount(remindersSummary.overdue_count)}
@@ -671,7 +671,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Active — 3 cols, blue */}
-            <div className="lg:col-span-3">
+            <div className="col-span-2 sm:col-span-1 lg:col-span-3">
               <StatCard
                 label="Active Reminders"
                 value={fmtCount(remindersSummary.total_active)}

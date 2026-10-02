@@ -42,7 +42,7 @@ export default function RootLayout({
             <Navbar />
 
             {/* ── Page content ── */}
-            <main className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
+            <main className="flex-1 w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-6 pb-24 md:pb-8 max-w-7xl">
               {children}
             </main>
           </AuthProvider>
