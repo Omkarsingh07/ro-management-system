@@ -26,10 +26,8 @@ import type {
 
 export function getBaseUrl(): string {
   if (typeof window !== "undefined") {
-    // If accessed from mobile/LAN IP (not localhost or 127.0.0.1), connect to that host on port 8000
-    if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
-      return `${window.location.protocol}//${window.location.hostname}:8000`;
-    }
+    // Match the current browsing host (localhost, 127.0.0.1, or phone LAN IP) on backend port 8000
+    return `${window.location.protocol}//${window.location.hostname}:8000`;
   }
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "");
